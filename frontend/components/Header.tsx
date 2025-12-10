@@ -28,6 +28,9 @@ export default function Header() {
             <a href="#services" className="text-gray-600 hover:text-primary-600 transition-colors">
               서비스
             </a>
+            <a href="#saas" className="text-gray-600 hover:text-primary-600 transition-colors">
+              SaaS
+            </a>
             <a href="#partners" className="text-gray-600 hover:text-primary-600 transition-colors">
               파트너
             </a>
