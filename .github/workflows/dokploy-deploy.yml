@@ -1,0 +1,59 @@
+name: Deploy to Dokploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy SocialDoctors to Dokploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Dokploy Deployment
+        env:
+          DOKPLOY_URL: ${{ secrets.DOKPLOY_URL }}
+          DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
+          APP_ID: ${{ secrets.DOKPLOY_APP_ID }}
+        run: |
+          echo "🚀 Triggering deployment to Dokploy..."
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$DOKPLOY_URL/api/application.deploy" \
+            -H "Authorization: Bearer $DOKPLOY_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"applicationId\": \"$APP_ID\"}")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+
+          echo "Response: $BODY"
+          echo "HTTP Status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Deployment triggered successfully!"
+          else
+            echo "❌ Deployment failed with status $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Wait for deployment
+        run: |
+          echo "⏳ Waiting 30 seconds for deployment to start..."
+          sleep 30
+          echo "✅ Check Dokploy dashboard for deployment status"
+
+      - name: Deployment summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📋 Deployment Information"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
