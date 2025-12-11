@@ -7,16 +7,16 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# 패키지 파일 복사 및 의존성 설치 (frontend 폴더에서)
-COPY frontend/package*.json ./
+# 패키지 파일 복사 및 의존성 설치
+COPY package*.json ./
 RUN npm ci
 
 # 빌드 단계
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-# frontend 폴더의 내용을 복사 (빌드 컨텍스트가 프로젝트 루트이므로)
-COPY frontend/ .
+# 소스 코드 복사 (빌드 컨텍스트가 frontend 폴더임)
+COPY . .
 
 # 빌드 시점에 필요한 환경 변수를 ARG로 받기 (실제 테스트 키 사용)
 # 런타임에 Dokploy가 환경 변수로 덮어씀
