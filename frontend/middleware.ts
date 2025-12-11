@@ -4,6 +4,9 @@ const isPublicRoute = createRouteMatcher([
   '/',
   '/sign-in(.*)',
   '/sign-up(.*)',
+  '/api(.*)',  // API 라우트도 public으로
+  '/robots.txt',
+  '/favicon.ico',
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
