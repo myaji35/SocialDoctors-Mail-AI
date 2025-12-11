@@ -12,8 +12,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 빌드 시 환경 변수가 없을 경우 빈 문자열 사용 (런타임에 재설정됨)
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={publishableKey}>
       <html lang="ko">
         <body className="antialiased">
           {children}
