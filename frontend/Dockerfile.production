@@ -18,7 +18,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # 빌드 시점에 필요한 환경 변수를 ARG로 받기 (기본값 포함)
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_placeholder
+# pk_test_로 시작하는 유효한 형식의 placeholder 사용
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_ZHVtbXktY2xlcmsta2V5LXBsYWNlaG9sZGVyLWZvci1idWlsZA==
 ARG NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 ARG NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
