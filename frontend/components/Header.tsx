@@ -2,6 +2,7 @@
 
 import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Header() {
   const { isSignedIn, user } = useUser();
@@ -16,20 +17,31 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🏥</span>
-            <span className="text-xl font-bold text-gray-900">
-              Social<span className="text-primary-600">Doctors</span>
-            </span>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="SaaS Clinic Logo"
+              width={48}
+              height={48}
+              className="object-contain"
+            />
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-gray-900 leading-tight">
+                SaaS Clinic
+              </span>
+              <span className="text-sm font-semibold text-primary-600 leading-tight">
+                SocialDoctor's
+              </span>
+            </div>
           </div>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#services" className="text-gray-600 hover:text-primary-600 transition-colors">
-              서비스
-            </a>
             <a href="#saas" className="text-gray-600 hover:text-primary-600 transition-colors">
               SaaS
+            </a>
+            <a href="#services" className="text-gray-600 hover:text-primary-600 transition-colors">
+              서비스
             </a>
             <a href="#partners" className="text-gray-600 hover:text-primary-600 transition-colors">
               파트너

@@ -43,7 +43,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, overview, url, partners, category, planeIssueId, planeProjectId } = body;
+    const { name, overview, url, partners, category, planeIssueId, planeProjectId, thumbnail } = body;
 
     // 제품 업데이트
     const updatedProduct = SaasStore.update(id, {
@@ -52,6 +52,7 @@ export async function PUT(
       url,
       partners,
       category,
+      thumbnail,
       planeIssueId,
       planeProjectId,
     });

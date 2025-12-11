@@ -2,9 +2,25 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import {
+  Smartphone,
+  Handshake,
+  Sparkles,
+  BarChart3,
+  Users,
+  CreditCard,
+  Mail,
+  Search,
+  Layout,
+  Globe,
+  LucideIcon
+} from 'lucide-react';
 
 interface Service {
-  icon: string;
+  icon: LucideIcon;
+  iconColor: string;
+  gradientFrom: string;
+  gradientTo: string;
   title: string;
   description: string;
   features: string[];
@@ -16,7 +32,10 @@ interface Service {
 
 const services: Service[] = [
   {
-    icon: '📱',
+    icon: Smartphone,
+    iconColor: 'text-purple-600',
+    gradientFrom: 'from-purple-500',
+    gradientTo: 'to-pink-500',
     title: '마케팅 자동화',
     description: '소셜 미디어 콘텐츠를 자동으로 생성하고 예약 게시합니다. AI 기반 콘텐츠 최적화로 효과적인 마케팅을 실현하세요.',
     features: ['AI 콘텐츠 생성', '예약 게시', '성과 분석', '멀티 플랫폼 지원'],
@@ -49,7 +68,10 @@ const services: Service[] = [
     pricing: 'Professional 플랜 이상에서 무제한 사용 가능',
   },
   {
-    icon: '🤝',
+    icon: Handshake,
+    iconColor: 'text-orange-600',
+    gradientFrom: 'from-orange-500',
+    gradientTo: 'to-yellow-500',
     title: '파트너 관리',
     description: '제휴사와 인플루언서를 체계적으로 관리합니다. 실시간 성과 추적과 커미션 관리로 파트너십을 강화하세요.',
     features: ['파트너 대시보드', '실시간 추적', '자동 정산', '성과 리포트'],
@@ -82,13 +104,19 @@ const services: Service[] = [
     pricing: 'Professional 플랜 이상에서 최대 50명, Enterprise에서 무제한',
   },
   {
-    icon: '✍️',
+    icon: Sparkles,
+    iconColor: 'text-blue-600',
+    gradientFrom: 'from-blue-500',
+    gradientTo: 'to-cyan-500',
     title: 'AI 콘텐츠',
     description: 'GPT 기반 카피라이팅으로 매력적인 콘텐츠를 즉시 생성합니다. 블로그, SNS, 광고 문구까지 모두 지원합니다.',
     features: ['다국어 지원', '브랜드 톤 학습', '무제한 생성', 'SEO 최적화']
   },
   {
-    icon: '📊',
+    icon: BarChart3,
+    iconColor: 'text-green-600',
+    gradientFrom: 'from-green-500',
+    gradientTo: 'to-emerald-500',
     title: '분석 대시보드',
     description: '실시간 성과 추적과 인사이트를 제공합니다. 데이터 기반 의사결정으로 비즈니스를 성장시키세요.',
     features: ['실시간 모니터링', '맞춤형 리포트', '예측 분석', '통합 대시보드'],
@@ -121,37 +149,55 @@ const services: Service[] = [
     pricing: 'Professional 플랜 이상에서 고급 분석 기능 제공',
   },
   {
-    icon: '👥',
+    icon: Users,
+    iconColor: 'text-indigo-600',
+    gradientFrom: 'from-indigo-500',
+    gradientTo: 'to-purple-500',
     title: '고객 관리 (CRM)',
     description: '고객과의 모든 접점을 관리합니다. 자동화된 커뮤니케이션과 개인화된 마케팅으로 고객 만족도를 높이세요.',
     features: ['고객 세그먼트', '자동 응답', '구매 이력 관리', '로열티 프로그램']
   },
   {
-    icon: '💳',
+    icon: CreditCard,
+    iconColor: 'text-red-600',
+    gradientFrom: 'from-red-500',
+    gradientTo: 'to-orange-500',
     title: '결제 시스템',
     description: '통합 결제 및 정산 관리 시스템입니다. 다양한 결제 수단을 지원하고 자동 정산 처리로 업무를 간소화합니다.',
     features: ['멀티 결제 지원', '자동 정산', '세금 계산', '환불 관리']
   },
   {
-    icon: '📧',
+    icon: Mail,
+    iconColor: 'text-violet-600',
+    gradientFrom: 'from-violet-500',
+    gradientTo: 'to-purple-500',
     title: '이메일 마케팅',
     description: '자동화된 이메일 캠페인으로 고객과 소통합니다. A/B 테스트와 세그먼트 기능으로 전환율을 높이세요.',
     features: ['드래그 앤 드롭 에디터', '자동화 워크플로우', 'A/B 테스팅', '상세 분석']
   },
   {
-    icon: '🔍',
+    icon: Search,
+    iconColor: 'text-lime-600',
+    gradientFrom: 'from-lime-500',
+    gradientTo: 'to-green-500',
     title: 'SEO 최적화',
     description: '검색 엔진 최적화 도구로 웹사이트 순위를 향상시킵니다. 키워드 분석, 백링크 추적, 경쟁사 분석을 제공합니다.',
     features: ['키워드 리서치', '순위 추적', '기술 SEO 감사', '백링크 분석']
   },
   {
-    icon: '📋',
+    icon: Layout,
+    iconColor: 'text-pink-600',
+    gradientFrom: 'from-pink-500',
+    gradientTo: 'to-rose-500',
     title: '프로젝트 관리',
     description: '팀 협업과 일정 관리를 한 곳에서 해결합니다. 칸반 보드, 간트 차트, 시간 추적 기능을 제공합니다.',
     features: ['칸반 보드', '간트 차트', '시간 추적', '팀 협업']
   },
   {
-    icon: '🌐',
+    icon: Globe,
+    iconColor: 'text-teal-600',
+    gradientFrom: 'from-teal-500',
+    gradientTo: 'to-cyan-500',
     title: '커뮤니티',
     description: '회원 커뮤니티 플랫폼으로 고객 참여를 유도합니다. 포럼, 이벤트, 멤버십 관리 기능을 제공합니다.',
     features: ['포럼 관리', '이벤트 캘린더', '멤버십 등급', '포인트 시스템']
@@ -193,18 +239,22 @@ export default function ServicesSection() {
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
-            >
-              {/* Icon */}
-              <div className="text-5xl mb-4">{service.icon}</div>
+          {services.map((service, index) => {
+            const IconComponent = service.icon;
+            return (
+              <motion.div
+                key={service.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+              >
+                {/* Icon */}
+                <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${service.gradientFrom} ${service.gradientTo} mb-6 shadow-md`}>
+                  <IconComponent className="w-10 h-10 text-white" strokeWidth={2} />
+                </div>
 
               {/* Title */}
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
@@ -236,7 +286,8 @@ export default function ServicesSection() {
                 자세히 보기 →
               </motion.button>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Bottom CTA */}
@@ -260,32 +311,34 @@ export default function ServicesSection() {
         </motion.div>
 
         {/* Service Detail Modal */}
-        {isModalOpen && selectedService && (
-          <div
-            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
-            onClick={closeModal}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl p-8 md:p-12 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        {isModalOpen && selectedService && (() => {
+          const ModalIconComponent = selectedService.icon;
+          return (
+            <div
+              className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+              onClick={closeModal}
             >
-              {/* Close Button */}
-              <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ duration: 0.3 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white rounded-3xl p-8 md:p-12 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
               >
-                <span className="text-2xl text-gray-600">×</span>
-              </button>
+                {/* Close Button */}
+                <button
+                  onClick={closeModal}
+                  className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                >
+                  <span className="text-2xl text-gray-600">×</span>
+                </button>
 
-              {/* Header */}
-              <div className="text-center mb-8 pb-8 border-b-2 border-gray-200">
-                <div className="inline-block p-6 bg-gradient-to-br from-primary-50 to-primary-100 rounded-3xl mb-4">
-                  <div className="text-7xl">{selectedService.icon}</div>
-                </div>
+                {/* Header */}
+                <div className="text-center mb-8 pb-8 border-b-2 border-gray-200">
+                  <div className={`inline-flex p-8 bg-gradient-to-br ${selectedService.gradientFrom} ${selectedService.gradientTo} rounded-3xl mb-4 shadow-lg`}>
+                    <ModalIconComponent className="w-20 h-20 text-white" strokeWidth={2} />
+                  </div>
                 <h2 className="text-4xl font-bold text-gray-900 mb-4">
                   {selectedService.title}
                 </h2>
@@ -385,7 +438,8 @@ export default function ServicesSection() {
               </div>
             </motion.div>
           </div>
-        )}
+          );
+        })()}
       </div>
     </section>
   );

@@ -42,22 +42,25 @@ export default function PlaneStatusDashboard() {
 
       // Fetch issues and states in parallel
       const [issuesRes, statesRes] = await Promise.all([
-        fetch('/api/plane/issues'),
-        fetch('/api/plane/states')
+        fetch('/api/plane/issues').catch(() => null),
+        fetch('/api/plane/states').catch(() => null)
       ]);
 
-      const issuesData = await issuesRes.json();
-      const statesData = await statesRes.json();
-
-      if (issuesData.success) {
-        setIssues(issuesData.data);
+      if (issuesRes && issuesRes.ok) {
+        const issuesData = await issuesRes.json();
+        if (issuesData.success) {
+          setIssues(issuesData.data);
+        }
       }
 
-      if (statesData.success) {
-        setStates(statesData.data);
+      if (statesRes && statesRes.ok) {
+        const statesData = await statesRes.json();
+        if (statesData.success) {
+          setStates(statesData.data);
+        }
       }
     } catch (error) {
-      console.error('Failed to fetch Plane data:', error);
+      // Silently handle Plane connection errors
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,8 @@
 // 공유 SaaS 제품 데이터 저장소
-// 실제 프로덕션 환경에서는 데이터베이스(PostgreSQL, MongoDB 등)를 사용해야 합니다
+// 파일 기반 JSON 저장소로 데이터 영구 보존
+
+import fs from 'fs';
+import path from 'path';
 
 export interface SaasProduct {
   id: string;
@@ -7,6 +10,7 @@ export interface SaasProduct {
   overview: string;
   url: string;
   partners: string[];
+  thumbnail?: string;
   category: string;
   planeIssueId?: string | null;
   planeProjectId?: string | null;
@@ -51,8 +55,43 @@ const initialProducts: SaasProduct[] = [
   },
 ];
 
-// 메모리 저장소 (서버 재시작 시 초기화됨)
-let saasProducts: SaasProduct[] = [...initialProducts];
+// 파일 경로
+const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_FILE = path.join(DATA_DIR, 'saas-products.json');
+
+// 데이터 파일에서 읽기
+function loadProducts(): SaasProduct[] {
+  try {
+    // data 디렉토리 생성
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+
+    // 파일이 없으면 초기 데이터로 생성
+    if (!fs.existsSync(DATA_FILE)) {
+      saveProducts(initialProducts);
+      return initialProducts;
+    }
+
+    const fileContent = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(fileContent);
+  } catch (error) {
+    console.error('Failed to load products:', error);
+    return [...initialProducts];
+  }
+}
+
+// 데이터 파일에 저장
+function saveProducts(products: SaasProduct[]): void {
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(products, null, 2), 'utf-8');
+  } catch (error) {
+    console.error('Failed to save products:', error);
+  }
+}
+
+// 메모리 캐시
+let saasProducts: SaasProduct[] = loadProducts();
 
 // CRUD 작업을 위한 유틸리티 함수들
 
@@ -80,6 +119,7 @@ export const SaasStore = {
       createdAt: new Date().toISOString(),
     };
     saasProducts.push(newProduct);
+    saveProducts(saasProducts);
     return newProduct;
   },
 
@@ -97,6 +137,7 @@ export const SaasStore = {
       updatedAt: new Date().toISOString(),
     };
 
+    saveProducts(saasProducts);
     return saasProducts[index];
   },
 
@@ -109,12 +150,14 @@ export const SaasStore = {
 
     const deletedProduct = saasProducts[index];
     saasProducts = saasProducts.filter((p) => p.id !== id);
+    saveProducts(saasProducts);
     return deletedProduct;
   },
 
   // 데이터 초기화 (테스트 용도)
   reset(): void {
     saasProducts = [...initialProducts];
+    saveProducts(saasProducts);
   },
 
   // 통계 정보

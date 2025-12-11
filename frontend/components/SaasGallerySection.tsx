@@ -26,7 +26,9 @@ export default function SaasGallerySection() {
     url: '',
     partners: [],
     category: '',
+    thumbnail: '',
   });
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   // API에서 제품 목록 가져오기
   useEffect(() => {
@@ -50,14 +52,42 @@ export default function SaasGallerySection() {
 
   const handleAddNew = () => {
     setEditingProduct(null);
-    setFormData({ name: '', overview: '', url: '', partners: [], category: '' });
+    setFormData({ name: '', overview: '', url: '', partners: [], category: '', thumbnail: '' });
+    setImagePreview('');
     setIsModalOpen(true);
   };
 
   const handleEdit = (product: SaasProduct) => {
     setEditingProduct(product);
     setFormData(product);
+    setImagePreview(product.thumbnail || '');
     setIsModalOpen(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // 파일 크기 체크 (5MB 제한)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('이미지 파일은 5MB 이하여야 합니다.');
+        return;
+      }
+
+      // 이미지 파일 타입 체크
+      if (!file.type.startsWith('image/')) {
+        alert('이미지 파일만 업로드 가능합니다.');
+        return;
+      }
+
+      // FileReader로 base64 변환
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setImagePreview(base64String);
+        setFormData({ ...formData, thumbnail: base64String });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -179,8 +209,16 @@ export default function SaasGallerySection() {
               className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
             >
               {/* Thumbnail */}
-              <div className="h-48 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
-                <span className="text-6xl">🚀</span>
+              <div className="h-48 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center relative overflow-hidden">
+                {product.thumbnail ? (
+                  <img
+                    src={product.thumbnail}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-6xl">🚀</span>
+                )}
               </div>
 
               {/* Content */}
@@ -358,6 +396,56 @@ export default function SaasGallerySection() {
                     className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     placeholder="파트너A, 파트너B, 파트너C"
                   />
+                </div>
+
+                {/* 썸네일 이미지 업로드 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    썸네일 이미지
+                  </label>
+                  <div className="space-y-4">
+                    {/* 이미지 미리보기 */}
+                    {imagePreview && (
+                      <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-300">
+                        <img
+                          src={imagePreview}
+                          alt="미리보기"
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setImagePreview('');
+                            setFormData({ ...formData, thumbnail: '' });
+                          }}
+                          className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-colors"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+
+                    {/* 파일 업로드 버튼 */}
+                    <div className="flex items-center justify-center w-full">
+                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg className="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500">
+                            <span className="font-semibold">클릭하여 업로드</span> 또는 드래그 앤 드롭
+                          </p>
+                          <p className="text-xs text-gray-400">PNG, JPG, GIF (최대 5MB)</p>
+                        </div>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Buttons */}

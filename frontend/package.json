@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.36.1",
     "@google/generative-ai": "^0.24.1",
     "framer-motion": "^11.15.0",
+    "lucide-react": "^0.559.0",
     "next": "^16.0.8",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"

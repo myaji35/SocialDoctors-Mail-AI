@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, overview, url, partners, category, planeProjectId } = body;
+    const { name, overview, url, partners, category, planeProjectId, thumbnail } = body;
 
     // 유효성 검사
     if (!name || !overview || !url || !category) {
@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
       url,
       partners: partners || [],
       category,
+      thumbnail,
       planeIssueId,
       planeProjectId: 'SOCIA',
     });
