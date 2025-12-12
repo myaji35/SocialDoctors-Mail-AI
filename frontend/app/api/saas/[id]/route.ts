@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SaasStore } from '@/lib/saas-store';
+import { prisma } from '@/lib/prisma';
 
 // GET: 특정 SaaS 제품 조회
 export async function GET(
@@ -8,7 +8,9 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const product = SaasStore.getById(id);
+    const product = await prisma.saasProduct.findUnique({
+      where: { id },
+    });
 
     if (!product) {
       return NextResponse.json(
@@ -25,6 +27,7 @@ export async function GET(
       data: product,
     });
   } catch (error) {
+    console.error('Failed to fetch SaaS product:', error);
     return NextResponse.json(
       {
         success: false,
@@ -46,26 +49,19 @@ export async function PUT(
     const { name, overview, url, partners, category, planeIssueId, planeProjectId, thumbnail } = body;
 
     // 제품 업데이트
-    const updatedProduct = SaasStore.update(id, {
-      name,
-      overview,
-      url,
-      partners,
-      category,
-      thumbnail,
-      planeIssueId,
-      planeProjectId,
+    const updatedProduct = await prisma.saasProduct.update({
+      where: { id },
+      data: {
+        name,
+        overview,
+        url,
+        partners,
+        category,
+        thumbnail,
+        planeIssueId,
+        planeProjectId,
+      },
     });
-
-    if (!updatedProduct) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'SaaS product not found',
-        },
-        { status: 404 }
-      );
-    }
 
     // TODO: Plane API 연동 - 이슈 업데이트
     // if (planeIssueId) {
@@ -77,7 +73,19 @@ export async function PUT(
       data: updatedProduct,
       message: 'SaaS product updated successfully',
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Failed to update SaaS product:', error);
+
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'SaaS product not found',
+        },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
@@ -95,17 +103,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const deletedProduct = SaasStore.delete(id);
-
-    if (!deletedProduct) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'SaaS product not found',
-        },
-        { status: 404 }
-      );
-    }
+    const deletedProduct = await prisma.saasProduct.delete({
+      where: { id },
+    });
 
     // TODO: Plane API 연동 - 이슈 삭제
     // if (deletedProduct.planeIssueId) {
@@ -117,7 +117,19 @@ export async function DELETE(
       data: deletedProduct,
       message: 'SaaS product deleted successfully',
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Failed to delete SaaS product:', error);
+
+    if (error.code === 'P2025') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'SaaS product not found',
+        },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,

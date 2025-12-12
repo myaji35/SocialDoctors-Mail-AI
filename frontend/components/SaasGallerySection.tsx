@@ -18,17 +18,8 @@ interface SaasProduct {
 export default function SaasGallerySection() {
   const [products, setProducts] = useState<SaasProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<SaasProduct | null>(null);
-  const [formData, setFormData] = useState<Partial<SaasProduct>>({
-    name: '',
-    overview: '',
-    url: '',
-    partners: [],
-    category: '',
-    thumbnail: '',
-  });
-  const [imagePreview, setImagePreview] = useState<string>('');
+  const [selectedProduct, setSelectedProduct] = useState<SaasProduct | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   // API에서 제품 목록 가져오기
   useEffect(() => {
@@ -50,110 +41,14 @@ export default function SaasGallerySection() {
     }
   };
 
-  const handleAddNew = () => {
-    setEditingProduct(null);
-    setFormData({ name: '', overview: '', url: '', partners: [], category: '', thumbnail: '' });
-    setImagePreview('');
-    setIsModalOpen(true);
+  const handleViewDetail = (product: SaasProduct) => {
+    setSelectedProduct(product);
+    setIsDetailOpen(true);
   };
 
-  const handleEdit = (product: SaasProduct) => {
-    setEditingProduct(product);
-    setFormData(product);
-    setImagePreview(product.thumbnail || '');
-    setIsModalOpen(true);
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // 파일 크기 체크 (5MB 제한)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('이미지 파일은 5MB 이하여야 합니다.');
-        return;
-      }
-
-      // 이미지 파일 타입 체크
-      if (!file.type.startsWith('image/')) {
-        alert('이미지 파일만 업로드 가능합니다.');
-        return;
-      }
-
-      // FileReader로 base64 변환
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setImagePreview(base64String);
-        setFormData({ ...formData, thumbnail: base64String });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (confirm('정말 삭제하시겠습니까?')) {
-      try {
-        const response = await fetch(`/api/saas/${id}`, {
-          method: 'DELETE',
-        });
-        const result = await response.json();
-        if (result.success) {
-          await fetchProducts(); // 목록 새로고침
-        } else {
-          alert('삭제 실패: ' + result.error);
-        }
-      } catch (error) {
-        console.error('Failed to delete product:', error);
-        alert('삭제 중 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      if (editingProduct) {
-        // 수정
-        const response = await fetch(`/api/saas/${editingProduct.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-        const result = await response.json();
-        if (!result.success) {
-          alert('수정 실패: ' + result.error);
-          return;
-        }
-      } else {
-        // 새로 추가
-        const response = await fetch('/api/saas', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-        const result = await response.json();
-        if (!result.success) {
-          alert('등록 실패: ' + result.error);
-          return;
-        }
-      }
-
-      await fetchProducts(); // 목록 새로고침
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Failed to save product:', error);
-      alert('저장 중 오류가 발생했습니다.');
-    }
-  };
-
-  const handlePartnersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const partnersArray = e.target.value.split(',').map((p) => p.trim());
-    setFormData({ ...formData, partners: partnersArray });
+  const closeModal = () => {
+    setIsDetailOpen(false);
+    setTimeout(() => setSelectedProduct(null), 300);
   };
 
   return (
@@ -165,331 +60,210 @@ export default function SaasGallerySection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            <span className="text-primary-600">마이크로 SaaS</span> 갤러리
+            SaaS <span className="text-primary-600">마켓플레이스</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            혁신적인 마이크로 SaaS 제품들을 만나보세요. 각 제품은 특정 비즈니스 문제를 해결합니다.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            다양한 카테고리의 SaaS 제품을 한눈에 확인하세요.
           </p>
-
-          {/* Admin Controls */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleAddNew}
-            className="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            + 새 SaaS 등록
-          </motion.button>
         </motion.div>
 
-        {/* Gallery Grid */}
         {isLoading ? (
           <div className="text-center py-20">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
             <p className="mt-4 text-gray-600">제품 목록을 불러오는 중...</p>
           </div>
-        ) : products.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-gray-600 text-lg">등록된 SaaS 제품이 없습니다.</p>
-            <p className="text-gray-500 mt-2">위의 버튼을 눌러 첫 제품을 등록해보세요!</p>
-          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
-            >
-              {/* Thumbnail */}
-              <div className="h-48 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center relative overflow-hidden">
-                {product.thumbnail ? (
-                  <img
-                    src={product.thumbnail}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-6xl">🚀</span>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                {/* Category Badge & Plane Status */}
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full">
-                    {product.category}
-                  </span>
-                  {product.planeIssueId ? (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                      ✈️ Plane 연동
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-500 text-xs font-semibold rounded-full">
-                      ⚠️ 미연동
-                    </span>
-                  )}
-                </div>
-
-                {/* Title */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                  {product.name}
-                </h3>
-
-                {/* Overview */}
-                <p className="text-gray-600 mb-4 leading-relaxed line-clamp-3">
-                  {product.overview}
-                </p>
-
-                {/* URL */}
-                <a
-                  href={product.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-600 hover:text-primary-700 text-sm font-medium mb-4 block truncate"
+          <>
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden cursor-pointer"
+                  onClick={() => handleViewDetail(product)}
                 >
-                  🔗 {product.url}
-                </a>
-
-                {/* Partners */}
-                <div className="mb-4">
-                  <div className="text-sm text-gray-500 mb-2">참여 파트너</div>
-                  <div className="flex flex-wrap gap-2">
-                    {product.partners.map((partner, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
-                      >
-                        {partner}
-                      </span>
-                    ))}
+                  {/* Thumbnail */}
+                  <div className="h-48 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center overflow-hidden">
+                    {product.thumbnail ? (
+                      <img
+                        src={product.thumbnail}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-6xl">🚀</span>
+                    )}
                   </div>
-                </div>
 
-                {/* Plane Link */}
-                {product.planeIssueId && (
-                  <a
-                    href={`http://34.158.192.195/testgraph/projects/SOCIA/issues/${product.planeIssueId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full py-2 mb-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg transition-colors duration-200"
-                  >
-                    ✈️ Plane에서 보기
-                  </a>
-                )}
+                  {/* Content */}
+                  <div className="p-6">
+                    {/* Category Badge */}
+                    <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full mb-3">
+                      {product.category}
+                    </span>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2 mt-4">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleEdit(product)}
-                    className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors duration-200"
-                  >
-                    ✏️ 수정
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleDelete(product.id)}
-                    className="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-lg transition-colors duration-200"
-                  >
-                    🗑️ 삭제
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-            ))}
-          </div>
-        )}
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      {product.name}
+                    </h3>
 
-        {/* Modal for Add/Edit */}
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                {editingProduct ? 'SaaS 수정' : '새 SaaS 등록'}
-              </h3>
+                    {/* Overview */}
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {product.overview}
+                    </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* 서비스명 */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    서비스명 *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="예: Social Pulse"
-                  />
-                </div>
-
-                {/* 카테고리 */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    카테고리 *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="예: 마케팅, AI, 분석"
-                  />
-                </div>
-
-                {/* 개요 */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    개요 *
-                  </label>
-                  <textarea
-                    required
-                    value={formData.overview}
-                    onChange={(e) => setFormData({ ...formData, overview: e.target.value })}
-                    rows={4}
-                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="서비스에 대한 간단한 설명을 입력하세요"
-                  />
-                </div>
-
-                {/* URL */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    URL *
-                  </label>
-                  <input
-                    type="url"
-                    required
-                    value={formData.url}
-                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="https://example.com"
-                  />
-                </div>
-
-                {/* 참여 파트너 */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    참여 파트너 (쉼표로 구분)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.partners?.join(', ')}
-                    onChange={handlePartnersChange}
-                    className="w-full px-4 py-3 bg-white text-gray-900 placeholder:text-gray-500 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                    placeholder="파트너A, 파트너B, 파트너C"
-                  />
-                </div>
-
-                {/* 썸네일 이미지 업로드 */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    썸네일 이미지
-                  </label>
-                  <div className="space-y-4">
-                    {/* 이미지 미리보기 */}
-                    {imagePreview && (
-                      <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-300">
-                        <img
-                          src={imagePreview}
-                          alt="미리보기"
-                          className="w-full h-full object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setImagePreview('');
-                            setFormData({ ...formData, thumbnail: '' });
-                          }}
-                          className="absolute top-2 right-2 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg transition-colors"
-                        >
-                          ✕
-                        </button>
+                    {/* Partners */}
+                    {product.partners && product.partners.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {product.partners.slice(0, 3).map((partner, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
+                          >
+                            {partner}
+                          </span>
+                        ))}
+                        {product.partners.length > 3 && (
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                            +{product.partners.length - 3}
+                          </span>
+                        )}
                       </div>
                     )}
 
-                    {/* 파일 업로드 버튼 */}
-                    <div className="flex items-center justify-center w-full">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg className="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500">
-                            <span className="font-semibold">클릭하여 업로드</span> 또는 드래그 앤 드롭
-                          </p>
-                          <p className="text-xs text-gray-400">PNG, JPG, GIF (최대 5MB)</p>
-                        </div>
-                        <input
-                          type="file"
-                          className="hidden"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                        />
-                      </label>
-                    </div>
+                    {/* View Detail Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewDetail(product);
+                      }}
+                    >
+                      상세보기 →
+                    </motion.button>
                   </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {products.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-gray-600 text-lg">등록된 SaaS 제품이 없습니다.</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Detail Modal */}
+        {isDetailOpen && selectedProduct && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+            onClick={closeModal}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-gray-900">제품 상세정보</h3>
+                <button
+                  onClick={closeModal}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6">
+                {/* Thumbnail */}
+                {selectedProduct.thumbnail && (
+                  <div className="mb-6 rounded-lg overflow-hidden">
+                    <img
+                      src={selectedProduct.thumbnail}
+                      alt={selectedProduct.name}
+                      className="w-full h-64 object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Category */}
+                <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full mb-4">
+                  {selectedProduct.category}
+                </span>
+
+                {/* Name */}
+                <h4 className="text-3xl font-bold text-gray-900 mb-4">
+                  {selectedProduct.name}
+                </h4>
+
+                {/* Overview */}
+                <div className="mb-6">
+                  <h5 className="text-lg font-semibold text-gray-900 mb-2">개요</h5>
+                  <p className="text-gray-700 leading-relaxed">
+                    {selectedProduct.overview}
+                  </p>
                 </div>
 
-                {/* Buttons */}
-                <div className="flex gap-4 mt-6">
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors"
+                {/* URL */}
+                <div className="mb-6">
+                  <h5 className="text-lg font-semibold text-gray-900 mb-2">웹사이트</h5>
+                  <a
+                    href={selectedProduct.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-600 hover:text-primary-700 underline"
                   >
-                    취소
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"
-                  >
-                    {editingProduct ? '수정 완료' : '등록하기'}
-                  </button>
+                    {selectedProduct.url}
+                  </a>
                 </div>
-              </form>
+
+                {/* Partners */}
+                {selectedProduct.partners && selectedProduct.partners.length > 0 && (
+                  <div className="mb-6">
+                    <h5 className="text-lg font-semibold text-gray-900 mb-2">참여 파트너</h5>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProduct.partners.map((partner, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg"
+                        >
+                          {partner}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Visit Website Button */}
+                <motion.a
+                  href={selectedProduct.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg text-center transition-colors"
+                >
+                  웹사이트 방문하기 →
+                </motion.a>
+              </div>
             </motion.div>
           </div>
         )}
-
-        {/* Plane Integration Notice */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-16 p-6 bg-blue-50 border border-blue-200 rounded-xl"
-        >
-          <div className="flex items-start gap-4">
-            <span className="text-3xl">✈️</span>
-            <div>
-              <h4 className="text-lg font-bold text-gray-900 mb-2">
-                Plane 프로젝트 관리 연동
-              </h4>
-              <p className="text-gray-600">
-                각 SaaS 제품은 Plane 프로젝트 관리 시스템과 연동되어 개발 진행 상황,
-                이슈 트래킹, 마일스톤을 실시간으로 확인할 수 있습니다.
-              </p>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

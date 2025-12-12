@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SaasStore } from '@/lib/saas-store';
+import { prisma } from '@/lib/prisma';
 
 // GET: 모든 SaaS 제품 조회
 export async function GET(request: NextRequest) {
@@ -8,9 +8,14 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
 
     // 카테고리 필터링
-    let filteredProducts = category
-      ? SaasStore.getByCategory(category)
-      : SaasStore.getAll();
+    const filteredProducts = category
+      ? await prisma.saasProduct.findMany({
+          where: { category },
+          orderBy: { createdAt: 'desc' },
+        })
+      : await prisma.saasProduct.findMany({
+          orderBy: { createdAt: 'desc' },
+        });
 
     return NextResponse.json({
       success: true,
@@ -18,6 +23,7 @@ export async function GET(request: NextRequest) {
       count: filteredProducts.length,
     });
   } catch (error) {
+    console.error('Failed to fetch SaaS products:', error);
     return NextResponse.json(
       {
         success: false,
@@ -70,15 +76,17 @@ export async function POST(request: NextRequest) {
     }
 
     // 새 제품 생성
-    const newProduct = SaasStore.create({
-      name,
-      overview,
-      url,
-      partners: partners || [],
-      category,
-      thumbnail,
-      planeIssueId,
-      planeProjectId: 'SOCIA',
+    const newProduct = await prisma.saasProduct.create({
+      data: {
+        name,
+        overview,
+        url,
+        partners: partners || [],
+        category,
+        thumbnail,
+        planeIssueId,
+        planeProjectId: planeProjectId || 'SOCIA',
+      },
     });
 
     return NextResponse.json(
@@ -92,6 +100,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    console.error('Failed to create SaaS product:', error);
     return NextResponse.json(
       {
         success: false,

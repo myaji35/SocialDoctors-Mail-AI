@@ -40,3 +40,5 @@ build/
 
 # Data (SaaS products with base64 images)
 frontend/data/
+
+/generated/prisma
