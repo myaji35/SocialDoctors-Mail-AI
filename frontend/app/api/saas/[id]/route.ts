@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { SaasStore } from '@/lib/saas-store';
 
 // GET: 특정 SaaS 제품 조회
 export async function GET(
@@ -8,9 +9,17 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const product = await prisma.saasProduct.findUnique({
-      where: { id },
-    });
+
+    // Prisma 시도, 실패 시 파일 기반 fallback
+    let product;
+    try {
+      product = await prisma.saasProduct.findUnique({
+        where: { id },
+      });
+    } catch (dbError) {
+      console.warn('Database not available, using file-based storage');
+      product = SaasStore.getById(id);
+    }
 
     if (!product) {
       return NextResponse.json(
@@ -48,10 +57,25 @@ export async function PUT(
     const body = await request.json();
     const { name, overview, url, partners, category, planeIssueId, planeProjectId, thumbnail } = body;
 
-    // 제품 업데이트
-    const updatedProduct = await prisma.saasProduct.update({
-      where: { id },
-      data: {
+    // 제품 업데이트 (Prisma 시도, 실패 시 파일 기반 fallback)
+    let updatedProduct;
+    try {
+      updatedProduct = await prisma.saasProduct.update({
+        where: { id },
+        data: {
+          name,
+          overview,
+          url,
+          partners,
+          category,
+          thumbnail,
+          planeIssueId,
+          planeProjectId,
+        },
+      });
+    } catch (dbError: any) {
+      console.warn('Database not available, using file-based storage');
+      updatedProduct = SaasStore.update(id, {
         name,
         overview,
         url,
@@ -60,8 +84,17 @@ export async function PUT(
         thumbnail,
         planeIssueId,
         planeProjectId,
-      },
-    });
+      });
+      if (!updatedProduct) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'SaaS product not found',
+          },
+          { status: 404 }
+        );
+      }
+    }
 
     // TODO: Plane API 연동 - 이슈 업데이트
     // if (planeIssueId) {
@@ -103,9 +136,26 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const deletedProduct = await prisma.saasProduct.delete({
-      where: { id },
-    });
+
+    // 제품 삭제 (Prisma 시도, 실패 시 파일 기반 fallback)
+    let deletedProduct;
+    try {
+      deletedProduct = await prisma.saasProduct.delete({
+        where: { id },
+      });
+    } catch (dbError: any) {
+      console.warn('Database not available, using file-based storage');
+      deletedProduct = SaasStore.delete(id);
+      if (!deletedProduct) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'SaaS product not found',
+          },
+          { status: 404 }
+        );
+      }
+    }
 
     // TODO: Plane API 연동 - 이슈 삭제
     // if (deletedProduct.planeIssueId) {
@@ -119,17 +169,6 @@ export async function DELETE(
     });
   } catch (error: any) {
     console.error('Failed to delete SaaS product:', error);
-
-    if (error.code === 'P2025') {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'SaaS product not found',
-        },
-        { status: 404 }
-      );
-    }
-
     return NextResponse.json(
       {
         success: false,

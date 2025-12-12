@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { SaasStore } from '@/lib/saas-store';
 
 // GET: 모든 SaaS 제품 조회
 export async function GET(request: NextRequest) {
@@ -7,15 +8,24 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
 
-    // 카테고리 필터링
-    const filteredProducts = category
-      ? await prisma.saasProduct.findMany({
-          where: { category },
-          orderBy: { createdAt: 'desc' },
-        })
-      : await prisma.saasProduct.findMany({
-          orderBy: { createdAt: 'desc' },
-        });
+    // Prisma 시도, 실패 시 파일 기반 fallback
+    let filteredProducts;
+    try {
+      filteredProducts = category
+        ? await prisma.saasProduct.findMany({
+            where: { category },
+            orderBy: { createdAt: 'desc' },
+          })
+        : await prisma.saasProduct.findMany({
+            orderBy: { createdAt: 'desc' },
+          });
+    } catch (dbError) {
+      console.warn('Database not available, using file-based storage:', dbError);
+      // Fallback to file-based storage
+      filteredProducts = category
+        ? SaasStore.getByCategory(category)
+        : SaasStore.getAll();
+    }
 
     return NextResponse.json({
       success: true,
@@ -75,9 +85,25 @@ export async function POST(request: NextRequest) {
       // Plane 실패해도 SaaS는 생성
     }
 
-    // 새 제품 생성
-    const newProduct = await prisma.saasProduct.create({
-      data: {
+    // 새 제품 생성 (Prisma 시도, 실패 시 파일 기반 fallback)
+    let newProduct;
+    try {
+      newProduct = await prisma.saasProduct.create({
+        data: {
+          name,
+          overview,
+          url,
+          partners: partners || [],
+          category,
+          thumbnail,
+          planeIssueId,
+          planeProjectId: planeProjectId || 'SOCIA',
+        },
+      });
+    } catch (dbError) {
+      console.warn('Database not available, using file-based storage');
+      // Fallback to file-based storage
+      newProduct = SaasStore.create({
         name,
         overview,
         url,
@@ -86,8 +112,8 @@ export async function POST(request: NextRequest) {
         thumbnail,
         planeIssueId,
         planeProjectId: planeProjectId || 'SOCIA',
-      },
-    });
+      });
+    }
 
     return NextResponse.json(
       {
