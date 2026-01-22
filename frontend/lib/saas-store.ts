@@ -12,6 +12,7 @@ export interface SaasProduct {
   partners: string[];
   thumbnail?: string;
   category: string;
+  isActive?: boolean;
   planeIssueId?: string | null;
   planeProjectId?: string | null;
   createdAt: string;
@@ -27,6 +28,7 @@ const initialProducts: SaasProduct[] = [
     url: 'https://socialpulse.example.com',
     partners: ['마케팅팀', '파트너A'],
     category: '마케팅',
+    isActive: true,
     planeIssueId: null,
     planeProjectId: null,
     createdAt: new Date().toISOString(),
@@ -38,6 +40,7 @@ const initialProducts: SaasProduct[] = [
     url: 'https://partnerhub.example.com',
     partners: ['영업팀', '파트너B'],
     category: '파트너 관리',
+    isActive: true,
     planeIssueId: null,
     planeProjectId: null,
     createdAt: new Date().toISOString(),
@@ -49,6 +52,7 @@ const initialProducts: SaasProduct[] = [
     url: 'https://contentai.example.com',
     partners: ['콘텐츠팀'],
     category: 'AI',
+    isActive: true,
     planeIssueId: null,
     planeProjectId: null,
     createdAt: new Date().toISOString(),

@@ -129,6 +129,64 @@ export async function PUT(
   }
 }
 
+// PATCH: SaaS 제품 활성화/비활성화 토글
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const { isActive } = body;
+
+    if (typeof isActive !== 'boolean') {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'isActive must be a boolean value',
+        },
+        { status: 400 }
+      );
+    }
+
+    // 제품 업데이트 (Prisma 시도, 실패 시 파일 기반 fallback)
+    let updatedProduct;
+    try {
+      updatedProduct = await prisma.saasProduct.update({
+        where: { id },
+        data: { isActive },
+      });
+    } catch (dbError: any) {
+      console.warn('Database not available, using file-based storage');
+      updatedProduct = SaasStore.update(id, { isActive });
+      if (!updatedProduct) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'SaaS product not found',
+          },
+          { status: 404 }
+        );
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: updatedProduct,
+      message: `SaaS product ${isActive ? 'activated' : 'deactivated'} successfully`,
+    });
+  } catch (error: any) {
+    console.error('Failed to toggle SaaS product status:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to toggle SaaS product status',
+      },
+      { status: 500 }
+    );
+  }
+}
+
 // DELETE: SaaS 제품 삭제
 export async function DELETE(
   request: NextRequest,

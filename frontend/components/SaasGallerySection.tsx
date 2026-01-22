@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface SaasProduct {
   id: string;
@@ -11,15 +12,15 @@ interface SaasProduct {
   partners: string[];
   thumbnail?: string;
   category: string;
+  isActive?: boolean;
   planeIssueId?: string | null;
   planeProjectId?: string | null;
 }
 
 export default function SaasGallerySection() {
+  const router = useRouter();
   const [products, setProducts] = useState<SaasProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState<SaasProduct | null>(null);
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   // API에서 제품 목록 가져오기
   useEffect(() => {
@@ -32,7 +33,9 @@ export default function SaasGallerySection() {
       const response = await fetch('/api/saas');
       const result = await response.json();
       if (result.success) {
-        setProducts(result.data);
+        // 활성화된 제품만 표시
+        const activeProducts = result.data.filter((p: SaasProduct) => p.isActive !== false);
+        setProducts(activeProducts);
       }
     } catch (error) {
       console.error('Failed to fetch products:', error);
@@ -41,14 +44,8 @@ export default function SaasGallerySection() {
     }
   };
 
-  const handleViewDetail = (product: SaasProduct) => {
-    setSelectedProduct(product);
-    setIsDetailOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsDetailOpen(false);
-    setTimeout(() => setSelectedProduct(null), 300);
+  const handleViewDetail = (productId: string) => {
+    router.push(`/saas/${productId}`);
   };
 
   return (
@@ -88,7 +85,7 @@ export default function SaasGallerySection() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
                   className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden cursor-pointer"
-                  onClick={() => handleViewDetail(product)}
+                  onClick={() => handleViewDetail(product.id)}
                 >
                   {/* Thumbnail */}
                   <div className="h-48 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center overflow-hidden">
@@ -146,7 +143,7 @@ export default function SaasGallerySection() {
                       className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleViewDetail(product);
+                        handleViewDetail(product.id);
                       }}
                     >
                       상세보기 →
@@ -162,107 +159,6 @@ export default function SaasGallerySection() {
               </div>
             )}
           </>
-        )}
-
-        {/* Detail Modal */}
-        {isDetailOpen && selectedProduct && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-            onClick={closeModal}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Modal Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-900">제품 상세정보</h3>
-                <button
-                  onClick={closeModal}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-
-              {/* Modal Content */}
-              <div className="p-6">
-                {/* Thumbnail */}
-                {selectedProduct.thumbnail && (
-                  <div className="mb-6 rounded-lg overflow-hidden">
-                    <img
-                      src={selectedProduct.thumbnail}
-                      alt={selectedProduct.name}
-                      className="w-full h-64 object-cover"
-                    />
-                  </div>
-                )}
-
-                {/* Category */}
-                <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-sm font-semibold rounded-full mb-4">
-                  {selectedProduct.category}
-                </span>
-
-                {/* Name */}
-                <h4 className="text-3xl font-bold text-gray-900 mb-4">
-                  {selectedProduct.name}
-                </h4>
-
-                {/* Overview */}
-                <div className="mb-6">
-                  <h5 className="text-lg font-semibold text-gray-900 mb-2">개요</h5>
-                  <p className="text-gray-700 leading-relaxed">
-                    {selectedProduct.overview}
-                  </p>
-                </div>
-
-                {/* URL */}
-                <div className="mb-6">
-                  <h5 className="text-lg font-semibold text-gray-900 mb-2">웹사이트</h5>
-                  <a
-                    href={selectedProduct.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-600 hover:text-primary-700 underline"
-                  >
-                    {selectedProduct.url}
-                  </a>
-                </div>
-
-                {/* Partners */}
-                {selectedProduct.partners && selectedProduct.partners.length > 0 && (
-                  <div className="mb-6">
-                    <h5 className="text-lg font-semibold text-gray-900 mb-2">참여 파트너</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedProduct.partners.map((partner, i) => (
-                        <span
-                          key={i}
-                          className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg"
-                        >
-                          {partner}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Visit Website Button */}
-                <motion.a
-                  href={selectedProduct.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="block w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg text-center transition-colors"
-                >
-                  웹사이트 방문하기 →
-                </motion.a>
-              </div>
-            </motion.div>
-          </div>
         )}
       </div>
     </section>

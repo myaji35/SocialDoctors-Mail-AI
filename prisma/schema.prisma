@@ -21,6 +21,7 @@ model SaasProduct {
   partners        String[]
   thumbnail       String?   @db.Text
   category        String
+  isActive        Boolean   @default(true)
   planeIssueId    String?
   planeProjectId  String?
   createdAt       DateTime  @default(now())

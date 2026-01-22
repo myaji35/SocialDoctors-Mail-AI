@@ -139,7 +139,7 @@ export default function PricingSection() {
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
           {pricingPlans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -148,7 +148,7 @@ export default function PricingSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className={`relative rounded-2xl p-8 ${
+              className={`relative rounded-2xl p-10 ${
                 plan.popular
                   ? 'bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-2xl scale-105'
                   : 'bg-white text-gray-900 shadow-lg'
@@ -254,6 +254,93 @@ export default function PricingSection() {
               )}
             </motion.div>
           ))}
+
+          {/* SD Funding Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            whileHover={{ y: -8, transition: { duration: 0.2 } }}
+            className="relative bg-white border-2 border-purple-500 rounded-2xl p-10 shadow-lg"
+          >
+            {/* 투자 Badge */}
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-purple-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                투자
+              </span>
+            </div>
+
+            {/* Title */}
+            <div className="text-center mb-8 mt-4">
+              <h3 className="text-3xl font-bold text-gray-900 mb-3">SD 펀딩</h3>
+              <div className="mb-4">
+                <span className="text-6xl font-bold text-purple-600">100만원</span>
+                <span className="text-gray-500 text-lg ml-2">최소</span>
+              </div>
+              <p className="text-gray-600 text-base">선착순 100명 한정</p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-semibold text-gray-600">투자 진행률</span>
+                <span className="text-sm font-bold text-purple-600">37/100명</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  whileInView={{ width: '37%' }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full"
+                />
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <motion.a
+              href="/funding"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="block w-full py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg font-bold rounded-lg shadow-lg transition-all mb-8 text-center"
+            >
+              투자 회원 신청하기
+            </motion.a>
+
+            {/* Features */}
+            <div className="space-y-3 mb-6">
+              <div className="text-sm font-semibold mb-3 text-gray-900">
+                포함된 기능:
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-0.5">✓</span>
+                <span className="text-sm text-gray-700">
+                  모든 SaaS <strong>평생 무료</strong>
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-0.5">✓</span>
+                <span className="text-sm text-gray-700">분기별 수익 배당</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-0.5">✓</span>
+                <span className="text-sm text-gray-700">신규 기능 우선 투표권</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-0.5">✓</span>
+                <span className="text-sm text-gray-700">투자자 전용 커뮤니티</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-600 mt-0.5">✓</span>
+                <span className="text-sm text-gray-700">최소 2년 lock-up</span>
+              </div>
+            </div>
+
+            <p className="text-center text-gray-500 text-sm mt-4">
+              * 투자 신청 후 심사를 거쳐 최종 확정됩니다
+            </p>
+          </motion.div>
         </div>
 
         {/* Feature Comparison */}

@@ -11,11 +11,14 @@ interface SaasProduct {
   partners: string[];
   thumbnail?: string;
   category: string;
+  isActive?: boolean;
   planeIssueId?: string | null;
   planeProjectId?: string | null;
 }
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
   const [products, setProducts] = useState<SaasProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,8 +34,33 @@ export default function AdminPage() {
   const [imagePreview, setImagePreview] = useState<string>('');
 
   useEffect(() => {
-    fetchProducts();
+    // 세션 스토리지에서 인증 상태 확인
+    const authStatus = sessionStorage.getItem('adminAuth');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+      fetchProducts();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'admin123') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('adminAuth', 'true');
+      fetchProducts();
+    } else {
+      alert('비밀번호가 올바르지 않습니다.');
+      setPassword('');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('adminAuth');
+    setPassword('');
+  };
 
   const fetchProducts = async () => {
     try {
@@ -81,6 +109,23 @@ export default function AdminPage() {
         setFormData({ ...formData, thumbnail: base64String });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleToggleActive = async (id: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch(`/api/saas/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive: !currentStatus }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        fetchProducts();
+      }
+    } catch (error) {
+      console.error('Failed to toggle product status:', error);
+      alert('상태 변경 실패');
     }
   };
 
@@ -135,6 +180,57 @@ export default function AdminPage() {
     }
   };
 
+  // 로그인 화면
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
+        >
+          <div className="text-center mb-8">
+            <div className="inline-block p-4 bg-blue-100 rounded-full mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">관리자 로그인</h1>
+            <p className="text-gray-600">SaaS 제품 관리 페이지에 접속하려면 비밀번호를 입력하세요.</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                비밀번호
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+                placeholder="관리자 비밀번호를 입력하세요"
+                required
+                autoFocus
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
+            >
+              로그인
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-gray-500">
+            비밀번호를 잊으셨나요? 시스템 관리자에게 문의하세요.
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -144,14 +240,24 @@ export default function AdminPage() {
             <h1 className="text-4xl font-bold text-gray-900">SaaS 제품 관리</h1>
             <p className="mt-2 text-gray-600">제품을 추가, 수정, 삭제할 수 있습니다</p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleAddNew}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg"
-          >
-            + 새 제품 추가
-          </motion.button>
+          <div className="flex gap-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleLogout}
+              className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg shadow-lg"
+            >
+              로그아웃
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAddNew}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg"
+            >
+              + 새 제품 추가
+            </motion.button>
+          </div>
         </div>
 
         {/* Products Table */}
@@ -168,6 +274,7 @@ export default function AdminPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">제품명</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">카테고리</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">파트너</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">상태</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">작업</th>
                 </tr>
               </thead>
@@ -191,6 +298,21 @@ export default function AdminPage() {
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {product.partners.slice(0, 2).join(', ')}
                       {product.partners.length > 2 && ` +${product.partners.length - 2}`}
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleToggleActive(product.id, product.isActive ?? true)}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                          product.isActive ?? true ? 'bg-blue-600' : 'bg-gray-300'
+                        }`}
+                        title={product.isActive ?? true ? '활성화됨' : '비활성화됨'}
+                      >
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            product.isActive ?? true ? 'translate-x-6' : 'translate-x-1'
+                          }`}
+                        />
+                      </button>
                     </td>
                     <td className="px-6 py-4 text-sm font-medium space-x-2">
                       <button
@@ -226,86 +348,123 @@ export default function AdminPage() {
                 <button onClick={() => setIsModalOpen(false)} className="text-2xl">×</button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">제품명 *</label>
+                  <label className="block text-base font-semibold text-gray-900 mb-2">
+                    제품명 <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+                    placeholder="예: Social Pulse"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">개요 *</label>
+                  <label className="block text-base font-semibold text-gray-900 mb-2">
+                    개요 <span className="text-red-500">*</span>
+                  </label>
                   <textarea
                     required
-                    rows={3}
+                    rows={4}
                     value={formData.overview}
                     onChange={(e) => setFormData({ ...formData, overview: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base resize-none"
+                    placeholder="제품에 대한 간단한 설명을 입력하세요"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">URL *</label>
-                  <input
-                    type="url"
-                    required
-                    value={formData.url}
-                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
-                  />
+                  <label className="block text-base font-semibold text-gray-900 mb-2">
+                    웹사이트 URL <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="url"
+                      required
+                      value={formData.url}
+                      onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+                      placeholder="https://example.com"
+                    />
+                    {formData.url && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(formData.url || '');
+                          alert('URL이 복사되었습니다!');
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                        title="URL 복사"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">카테고리 *</label>
+                  <label className="block text-base font-semibold text-gray-900 mb-2">
+                    카테고리 <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3 py-2 border rounded-lg"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+                    placeholder="예: 마케팅, AI, 파트너 관리"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">파트너 (쉼표로 구분)</label>
+                  <label className="block text-base font-semibold text-gray-900 mb-2">
+                    파트너
+                  </label>
                   <input
                     type="text"
                     value={Array.isArray(formData.partners) ? formData.partners.join(', ') : formData.partners}
                     onChange={(e) => setFormData({ ...formData, partners: e.target.value.split(',').map(p => p.trim()) })}
-                    className="w-full px-3 py-2 border rounded-lg"
-                    placeholder="파트너A, 파트너B"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+                    placeholder="파트너A, 파트너B (쉼표로 구분)"
                   />
+                  <p className="mt-1 text-sm text-gray-500">쉼표(,)로 구분하여 여러 파트너를 입력하세요</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">썸네일 이미지</label>
+                  <label className="block text-base font-semibold text-gray-900 mb-2">
+                    썸네일 이미지
+                  </label>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    className="w-full px-3 py-2 border rounded-lg"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   />
+                  <p className="mt-1 text-sm text-gray-500">권장: 1200x630px, 최대 5MB</p>
                   {imagePreview && (
-                    <img src={imagePreview} alt="Preview" className="mt-2 h-32 object-cover rounded" />
+                    <div className="mt-4">
+                      <img src={imagePreview} alt="Preview" className="h-40 object-cover rounded-lg border border-gray-200" />
+                    </div>
                   )}
                 </div>
 
-                <div className="flex gap-3 pt-4">
+                <div className="flex gap-4 pt-6 border-t">
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg"
+                    className="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all text-base"
                   >
-                    {editingProduct ? '수정' : '생성'}
+                    {editingProduct ? '수정 완료' : '제품 생성'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="flex-1 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg"
+                    className="flex-1 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-all text-base"
                   >
                     취소
                   </button>
