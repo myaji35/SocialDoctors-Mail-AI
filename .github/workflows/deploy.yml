@@ -43,11 +43,13 @@ jobs:
 
             docker run -d \
               --name socialdoctors-nextjs \
-              --network socialdoctors_internal \
               -p 3110:3000 \
               --env-file /opt/socialdoctors-nextjs/.env.production \
               --restart unless-stopped \
               socialdoctors-nextjs:latest
+
+            # socialdoctors_internal 네트워크 연결 (DB 접근용)
+            docker network connect socialdoctors_internal socialdoctors-nextjs || true
 
             echo "⏳ Waiting for app to start..."
             sleep 10
