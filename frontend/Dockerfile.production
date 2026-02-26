@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY prisma ./prisma/
-RUN npm ci && node_modules/.bin/prisma generate
+RUN npm ci
 
 # 빌드 단계
 FROM base AS builder
@@ -19,8 +19,10 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+# prisma generate 시 DATABASE_URL 더미값 (generate는 DB 연결 불필요)
+ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 
-RUN npm run build
+RUN node node_modules/prisma/build/index.js generate && node node_modules/next/dist/bin/next build
 
 # 프로덕션 이미지 (최소 크기)
 FROM base AS runner
