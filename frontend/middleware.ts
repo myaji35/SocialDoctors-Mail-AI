@@ -1,25 +1,31 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-const isPublicRoute = createRouteMatcher([
-  '/',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
-  '/api(.*)',  // API 라우트도 public으로
-  '/robots.txt',
-  '/favicon.ico',
-]);
+// 인증이 필요한 경로
+const PROTECTED_PATHS = ['/partner/dashboard', '/admin'];
 
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect();
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p));
+  if (!isProtected) return NextResponse.next();
+
+  // NextAuth session cookie 확인
+  const sessionToken =
+    request.cookies.get('next-auth.session-token')?.value ||
+    request.cookies.get('__Secure-next-auth.session-token')?.value;
+
+  if (!sessionToken) {
+    const signInUrl = new URL('/sign-in', request.url);
+    signInUrl.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(signInUrl);
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
   ],
 };
