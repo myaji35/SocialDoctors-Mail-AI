@@ -1,58 +1,40 @@
-# Dokploy용 Production Dockerfile
-# GCP linux/amd64 서버용 플랫폼 명시
-FROM --platform=linux/amd64 node:20-alpine AS base
+# Vultr Production Dockerfile (NextAuth.js 기반)
+FROM node:20-alpine AS base
 
 # 의존성 설치 단계
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
-# 패키지 파일 복사 및 의존성 설치
 COPY package*.json ./
-RUN npm ci
+COPY prisma ./prisma/
+RUN npm ci && node_modules/.bin/prisma generate
 
 # 빌드 단계
 FROM base AS builder
+RUN apk add --no-cache openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-# 소스 코드 복사 (빌드 컨텍스트가 frontend 폴더임)
 COPY . .
 
-# 빌드 시점에 필요한 환경 변수를 ARG로 받기 (실제 테스트 키 사용)
-# 런타임에 Dokploy가 환경 변수로 덮어씀
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_b2JsaWdpbmctdGVhbC03OC5jbGVyay5hY2NvdW50cy5kZXYk
-ARG NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-ARG NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
-
-# 환경 변수 설정 (빌드 타임 - 런타임에 Dokploy가 실제 값으로 덮어씀)
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-ENV NEXT_PUBLIC_CLERK_SIGN_IN_URL=$NEXT_PUBLIC_CLERK_SIGN_IN_URL
-ENV NEXT_PUBLIC_CLERK_SIGN_UP_URL=$NEXT_PUBLIC_CLERK_SIGN_UP_URL
-ENV NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=$NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL
-ENV NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=$NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
 
-# Next.js 빌드
 RUN npm run build
 
-# 프로덕션 이미지 - 최소 크기
+# 프로덕션 이미지 (최소 크기)
 FROM base AS runner
+RUN apk add --no-cache openssl
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# 보안을 위한 non-root 사용자 생성
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Next.js standalone 출력 복사
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# public 폴더 복사 (robots.txt 등)
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 SocialDoctors is a micro-SaaS marketplace platform that integrates 10+ independent SaaS products under a unified authentication system with an affiliate/partner revenue-sharing model. The concept is "Business Clinic" - diagnosing business/agricultural/lifestyle problems and prescribing appropriate SaaS solutions.
 
-**Current Status:** MVP deployed to production. Frontend deployed on Dokploy. See `prd.md` for complete product requirements and `DEPLOYMENT_SUMMARY.md` for deployment details.
+**Current Status:** MVP deployed to production. Frontend deployed on Vultr (Coolify). See `prd.md` for complete product requirements.
 
 ## Technical Stack
 
@@ -14,15 +14,15 @@ SocialDoctors is a micro-SaaS marketplace platform that integrates 10+ independe
 - **Framework:** Next.js 16.0.8 with App Router (Turbopack)
 - **Styling:** Tailwind CSS + Framer Motion for animations/interactions
 - **UI Components:** Shadcn/ui for modern, clean components
-- **Authentication:** Clerk (SSO)
+- **Authentication:** NextAuth.js (Google OAuth)
 - **Build Mode:** Standalone output for Docker optimization
-- **Deployment:** Dokploy (Docker containers on GCP)
+- **Deployment:** Vultr + Coolify (Docker containers)
 
 ### Backend
 - **Server:** Node.js (NestJS) or Python (FastAPI) with microservices architecture consideration
 - **Database:** PostgreSQL for relational data (users, payments, partner data)
-- **Authentication:** Clerk for unified SSO
-- **Deployment:** Dokploy (planned)
+- **Authentication:** NextAuth.js / session-based
+- **Deployment:** Vultr + Coolify
 
 ### Integrations
 - **Payment:** PG integration with webhook receiver for payment event tracking (planned)
@@ -31,12 +31,12 @@ SocialDoctors is a micro-SaaS marketplace platform that integrates 10+ independe
 - **Project Management:** Plane integration for issue tracking
 
 ### Infrastructure
-- **Platform:** GCP linux/amd64
-- **Container Runtime:** Docker
-- **Deployment Platform:** Dokploy (open-source PaaS)
-- **Reverse Proxy:** Traefik (via Dokploy)
-- **CI/CD:** GitHub Actions
-- **Domain Service:** nip.io (wildcard DNS)
+- **Platform:** Vultr (Ubuntu 24.04, 8GB RAM, 150GB SSD)
+- **Container Runtime:** Docker 29.2.1
+- **Deployment Platform:** Coolify (self-hosted PaaS)
+- **Reverse Proxy:** nginx
+- **CI/CD:** GitHub Actions (SSH direct deploy)
+- **Domain:** socialdoctors.kr
 
 ## Architecture Principles
 
@@ -92,25 +92,26 @@ docker build -f Dockerfile.production -t socialdoctors-test .
 docker run -p 3000:3000 socialdoctors-test
 ```
 
-### Dokploy CLI Deployment
+### Vultr SSH Deployment (Manual)
 ```bash
-# Install community CLI (supports non-interactive mode)
-npm install -g @sebbev/dokploy-cli
+# SSH into Vultr server
+ssh root@158.247.235.31
 
-# Authenticate
-dokploy-cli auth login --url http://34.64.143.114:3000 --token [TOKEN]
-
-# Deploy
-dokploy-cli app deploy \
-  -p SVSYksCZ8lAr2Mdrg8902 \
-  -e jn2nZM3RYvYrTczdn4Tdl \
-  -a 4sc-UR-ll0dwt7DtoBECo \
-  -y
+# Pull latest code and rebuild
+cd /opt/socialdoctors-nextjs
+git pull origin main
+docker build -f frontend/Dockerfile.production -t socialdoctors-nextjs ./frontend
+docker stop socialdoctors-nextjs && docker rm socialdoctors-nextjs
+docker run -d --name socialdoctors-nextjs \
+  --network socialdoctors_internal \
+  -p 3110:3000 \
+  --env-file /opt/socialdoctors-nextjs/.env.production \
+  socialdoctors-nextjs
 ```
 
 ### GitHub Actions (Automatic)
-- Push to `main` branch triggers automatic deployment
-- Workflow: `.github/workflows/dokploy-deploy.yml`
+- Push to `main` branch triggers automatic deployment via SSH
+- Workflow: `.github/workflows/deploy.yml`
 
 ## Key Implementation Considerations
 
@@ -129,163 +130,135 @@ dokploy-cli app deploy \
 
 ---
 
-## Dokploy Deployment Guide
+## Vultr Deployment Guide
 
 ### Production Environment
-- **URL:** http://socialdoctors.34.64.143.114.nip.io
-- **Dashboard:** http://34.64.143.114:3000
-- **Server:** GCP linux/amd64
-- **Project ID:** SVSYksCZ8lAr2Mdrg8902
-- **Environment ID:** jn2nZM3RYvYrTczdn4Tdl
-- **Application ID:** 4sc-UR-ll0dwt7DtoBECo
+- **Server IP:** 158.247.235.31 (Vultr, Ubuntu 24.04)
+- **Domain:** socialdoctors.kr
+- **Management:** Coolify (self-hosted PaaS)
+- **Rails App:** socialdoctors-web → port 3100 → socialdoctors.kr
+- **Next.js App:** socialdoctors-nextjs → port 3110 → app.socialdoctors.kr (or subdomain)
+
+### Server Architecture
+
+```
+socialdoctors.kr
+      ↓
+   nginx (reverse proxy)
+      ↓
+  ┌─────────────────────────────┐
+  │  Docker containers          │
+  │  ├── socialdoctors-web:3100 │  (Rails app)
+  │  ├── socialdoctors-nextjs:3110 │  (Next.js)
+  │  └── socialdoctors-db:5432  │  (PostgreSQL)
+  └─────────────────────────────┘
+       network: socialdoctors_internal
+```
 
 ### Dockerfile Configuration
 
-**Key Settings for Next.js on Dokploy:**
+**`frontend/Dockerfile.production`:**
 
 ```dockerfile
-# MUST specify platform for cross-platform builds
-FROM --platform=linux/amd64 node:20-alpine AS base
+FROM node:20-alpine AS base
+# NOTE: No --platform flag needed (Vultr is linux/amd64 native)
 
-# MUST use standalone output mode
+# standalone output mode
 # Set in next.config.ts: output: 'standalone'
-
-# MUST provide build-time environment variables
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_[your-key]
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ```
 
-**File Location:** `frontend/Dockerfile.production`
+### Production Environment Variables
 
-### Dokploy Dashboard Settings
-
-**Build Configuration:**
-- **Build Type:** Dockerfile
-- **Dockerfile Path:** `Dockerfile.production`
-- **Docker Context Path:** `frontend`
-- **Container Port:** 3000
-
-**CRITICAL:** The build context must be the `frontend` folder, not project root!
-
-### Environment Variables
-
-**Set in Dokploy Environment Tab:**
+**`/opt/socialdoctors-nextjs/.env.production` on server:**
 ```env
 NODE_ENV=production
 PORT=3000
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=[your-key]
-CLERK_SECRET_KEY=[your-secret]
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
-GEMINI_API_KEY=[your-key]
-PLANE_URL=http://34.158.192.195
-PLANE_WORKSPACE=testgraph
-PLANE_PROJECT_ID=SOCIA
+DATABASE_URL=postgresql://socialdoctors:[PASSWORD]@socialdoctors-db:5432/socialdoctors_nextjs
+GOOGLE_CLIENT_ID=[your-google-client-id]
+GOOGLE_CLIENT_SECRET=[your-google-client-secret]
+NEXTAUTH_SECRET=[your-nextauth-secret]
+NEXTAUTH_URL=https://app.socialdoctors.kr
+NEXT_PUBLIC_BASE_URL=https://app.socialdoctors.kr
+WEBHOOK_SECRET=[your-webhook-secret]
+ADMIN_PASSWORD=[your-admin-password]
+META_APP_ID=[your-meta-app-id]
+META_APP_SECRET=[your-meta-app-secret]
+TOKEN_ENCRYPTION_KEY=[32-char-random-key]
+SOCIAL_PULSE_API_KEY=[your-api-key]
+FORCE_REAL_PUBLISH=1
 NEXT_TELEMETRY_DISABLED=1
 ```
-
-### Domain Configuration
-
-**Using nip.io for IP-based subdomains:**
-```
-Host: socialdoctors.34.64.143.114.nip.io
-Path: /
-Container Port: 3000
-HTTPS: OFF (enable later with SSL)
-```
-
-**Why nip.io?** IP addresses cannot have traditional subdomains. nip.io provides wildcard DNS that automatically resolves to the IP embedded in the domain name.
 
 ### GitHub Actions Integration
 
 **Required Secrets (Settings → Secrets → Actions):**
 ```
-DOKPLOY_URL=http://34.64.143.114:3000
-DOKPLOY_TOKEN=[your-api-token]
-DOKPLOY_APP_ID=4sc-UR-ll0dwt7DtoBECo
+VULTR_HOST=158.247.235.31
+VULTR_USER=root
+VULTR_SSH_KEY=[private SSH key content]
 ```
 
-**Workflow File:** `.github/workflows/dokploy-deploy.yml`
+**Workflow File:** `.github/workflows/deploy.yml`
 
-**Trigger:** Automatic deployment on push to `main` branch
+**Trigger:** Automatic deployment on push to `main` branch via SSH
+
+### Database Setup
+
+**PostgreSQL on `socialdoctors-db` container:**
+```bash
+# Create Next.js database (run once)
+docker exec socialdoctors-db psql -U socialdoctors -c \
+  "CREATE DATABASE socialdoctors_nextjs;"
+
+# Run Prisma migrations
+docker exec socialdoctors-nextjs npx prisma migrate deploy
+```
+
+### nginx Configuration
+
+**`/etc/nginx/sites-available/socialdoctors`:**
+```nginx
+# Rails app
+server {
+    listen 80;
+    server_name socialdoctors.kr www.socialdoctors.kr;
+    location / { proxy_pass http://localhost:3100; }
+}
+
+# Next.js app
+server {
+    listen 80;
+    server_name app.socialdoctors.kr;
+    location / { proxy_pass http://localhost:3110; }
+}
+```
 
 ### Common Issues & Solutions
 
-#### 1. "Clerk publishableKey missing" during build
-**Problem:** `NEXT_PUBLIC_*` variables are bundled at build time, not runtime
-**Solution:** Add real values to Dockerfile ARG defaults:
-```dockerfile
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_[actual-test-key]
-```
+#### 1. Container network access
+**Problem:** Next.js can't connect to `socialdoctors-db`
+**Solution:** Run container with `--network socialdoctors_internal`
 
-#### 2. "/app/public: not found" during Docker build
-**Problem:** Docker context path mismatch
-**Solution:** Set Context Path to `frontend` in Dokploy, not `.` or `/`
-
-#### 3. "Github Provider not found"
-**Problem:** GitHub not connected to Dokploy
-**Solution:**
-1. Dokploy Dashboard → Settings → Git Providers
-2. Add GitHub → Authorize application
-3. Grant repository access
-
-#### 4. CLI "readline was closed" error
-**Problem:** Official `@dokploy/cli` only supports interactive mode
-**Solution:** Use community CLI `@sebbev/dokploy-cli` which supports `--yes` flag
-
-#### 5. Cross-platform build issues (Apple Silicon → GCP)
-**Problem:** Building on macOS arm64, deploying to linux/amd64
-**Solution:** Always specify `--platform=linux/amd64` in Dockerfile FROM statement
-
-### Best Practices
-
-1. **Environment Variables:**
-   - NEVER commit sensitive keys to git
-   - Use Dokploy Environment Variables for runtime secrets
-   - Use Dockerfile ARG defaults for build-time variables (with placeholder values)
-
-2. **Docker Optimization:**
-   - Use multi-stage builds
-   - Use `.dockerignore` to exclude unnecessary files
-   - Use `standalone` output mode in Next.js for minimal image size
-
-3. **Build Context:**
-   - Always set Docker Context Path to the folder containing package.json
-   - For monorepos, context should be the app folder, not root
-
-4. **Public Routes:**
-   - Configure Clerk middleware to allow public access to home page
-   - Use `createRouteMatcher` for public route patterns
-
-5. **CI/CD:**
-   - Use GitHub Actions for automatic deployments
-   - Store all secrets in GitHub Secrets, never in workflow files
-   - Add proper error handling in deployment scripts
+#### 2. Prisma migrations on deploy
+**Problem:** Schema changes not applied
+**Solution:** Run `docker exec socialdoctors-nextjs npx prisma migrate deploy` after deploy
 
 ### Monitoring & Debugging
 
 **Check Application Logs:**
 ```bash
-# Via Dokploy Dashboard
-Logs tab → Real-time container logs
+# SSH into server
+ssh root@158.247.235.31
 
-# Via CLI (if available)
-dokploy-cli logs --app [APP_ID] --follow
+# View Next.js logs
+docker logs socialdoctors-nextjs --tail 100 -f
+
+# View nginx logs
+tail -f /var/log/nginx/access.log
 ```
-
-**Check Build Logs:**
-- Dokploy Dashboard → Deployments tab → Latest deployment → View logs
 
 **Health Check:**
 ```bash
-curl -I http://socialdoctors.34.64.143.114.nip.io
+curl -I http://158.247.235.31:3110
 # Should return HTTP 200 OK
 ```
-
-### Useful Resources
-
-- **Dokploy Docs:** https://docs.dokploy.com
-- **Deployment Summary:** See `DEPLOYMENT_SUMMARY.md` in repository
-- **Quick Start Guide:** See `DOKPLOY_QUICKSTART.md` in repository
