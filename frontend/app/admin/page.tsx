@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface SaasProduct {
   id: string;
@@ -44,14 +45,25 @@ export default function AdminPage() {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin123') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('adminAuth', 'true');
-      fetchProducts();
-    } else {
-      alert('비밀번호가 올바르지 않습니다.');
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('adminAuth', 'true');
+        sessionStorage.setItem('adminPassword', password); // admin API 토큰 전송용
+        fetchProducts();
+      } else {
+        alert('비밀번호가 올바르지 않습니다.');
+        setPassword('');
+      }
+    } catch {
+      alert('인증 오류가 발생했습니다.');
       setPassword('');
     }
   };
@@ -239,6 +251,20 @@ export default function AdminPage() {
           <div>
             <h1 className="text-4xl font-bold text-gray-900">SaaS 제품 관리</h1>
             <p className="mt-2 text-gray-600">제품을 추가, 수정, 삭제할 수 있습니다</p>
+            <div className="flex gap-3 mt-3">
+              <Link href="/admin/partners" className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                파트너 관리
+              </Link>
+              <Link href="/admin/settlements" className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                정산 관리
+              </Link>
+              <Link href="/admin/social-pulse" className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M22 4s-2.5 2.5-5 5c-1 1-2.5 1.5-4 1.5S10 10 9 9l-5 5"/><polyline points="15 4 22 4 22 11"/></svg>
+                SNS 발행 관리
+              </Link>
+            </div>
           </div>
           <div className="flex gap-3">
             <motion.button

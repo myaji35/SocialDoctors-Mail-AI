@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const pricingPlans = [
   {
@@ -91,6 +92,15 @@ const faqs = [
 
 export default function PricingSection() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
+  const router = useRouter();
+
+  const handlePlanCta = (cta: string) => {
+    if (cta === '영업팀 문의') {
+      window.location.href = 'mailto:hello@socialdoctors.co.kr?subject=Enterprise 플랜 문의';
+      return;
+    }
+    router.push('/sign-up');
+  };
 
   return (
     <section id="pricing" className="py-20 bg-gradient-to-b from-primary-50 to-white">
@@ -202,6 +212,7 @@ export default function PricingSection() {
 
               {/* CTA Button */}
               <motion.button
+                onClick={() => handlePlanCta(plan.cta)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`w-full py-3 rounded-lg font-semibold mb-8 transition-colors duration-200 ${
@@ -418,13 +429,14 @@ export default function PricingSection() {
           <p className="text-gray-600 mb-6">
             더 궁금한 점이 있으신가요? 언제든지 문의하세요.
           </p>
-          <motion.button
+          <motion.a
+            href="mailto:hello@socialdoctors.co.kr?subject=요금제 문의"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-white hover:bg-gray-50 text-primary-600 font-bold rounded-lg border-2 border-primary-600 transition-all duration-300"
+            className="inline-block px-8 py-4 bg-white hover:bg-gray-50 text-primary-600 font-bold rounded-lg border-2 border-primary-600 transition-all duration-300"
           >
             영업팀에 문의하기
-          </motion.button>
+          </motion.a>
         </motion.div>
       </div>
     </section>

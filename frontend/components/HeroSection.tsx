@@ -1,8 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function HeroSection() {
+  const handleBrowse = () => {
+    document.getElementById('saas')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50">
       {/* Animated background elements */}
@@ -62,10 +67,16 @@ export default function HeroSection() {
             transition={{ delay: 0.7, duration: 0.8 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <button className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <Link
+              href="/sign-up"
+              className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-block"
+            >
               무료로 시작하기
-            </button>
-            <button className="px-8 py-4 bg-white hover:bg-gray-50 text-primary-600 font-semibold rounded-lg shadow-lg border-2 border-primary-200 hover:border-primary-300 transition-all duration-300">
+            </Link>
+            <button
+              onClick={handleBrowse}
+              className="px-8 py-4 bg-white hover:bg-gray-50 text-primary-600 font-semibold rounded-lg shadow-lg border-2 border-primary-200 hover:border-primary-300 transition-all duration-300"
+            >
               서비스 둘러보기
             </button>
           </motion.div>

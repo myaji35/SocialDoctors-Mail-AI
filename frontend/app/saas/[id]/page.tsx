@@ -17,6 +17,14 @@ interface SaasProduct {
   planeProjectId?: string | null;
 }
 
+interface PlaneIssue {
+  id: string;
+  name: string;
+  priority?: string;
+  state_detail?: { name: string; color: string; group: string };
+  created_at?: string;
+}
+
 interface FeedbackReply {
   id: string;
   author: string;
@@ -36,6 +44,43 @@ interface Feedback {
   replies?: FeedbackReply[];
 }
 
+// CertiGraph 프로젝트 기획 이슈 (Plane fallback)
+const CERTIGRAPH_FALLBACK_ISSUES: PlaneIssue[] = [
+  // Epic
+  { id: 'cg-e1', name: '[Epic] PDF → Knowledge Graph 파이프라인 고도화', priority: 'urgent',
+    state_detail: { name: '진행중', color: '#3B82F6', group: 'started' } },
+  { id: 'cg-e2', name: '[Epic] 자격증 확장 — 요양보호사·간호조무사 추가', priority: 'high',
+    state_detail: { name: '백로그', color: '#94A3B8', group: 'backlog' } },
+  { id: 'cg-e3', name: '[Epic] SocialDoctors 파트너 채널 통합', priority: 'high',
+    state_detail: { name: '백로그', color: '#94A3B8', group: 'backlog' } },
+  { id: 'cg-e4', name: '[Epic] 결제 시스템 — Toss Payments 실연동', priority: 'urgent',
+    state_detail: { name: '진행중', color: '#3B82F6', group: 'started' } },
+  // Story
+  { id: 'cg-s1', name: '[Story] 수험생 수요 조사 설문 → CRM 연동', priority: 'medium',
+    state_detail: { name: '완료', color: '#22C55E', group: 'completed' } },
+  { id: 'cg-s2', name: '[Story] Knowledge Graph 3D 시각화 성능 최적화', priority: 'high',
+    state_detail: { name: '진행중', color: '#3B82F6', group: 'started' } },
+  { id: 'cg-s3', name: '[Story] AI 합격 예측 모델 정확도 개선 (GPT-4o 전환)', priority: 'medium',
+    state_detail: { name: '백로그', color: '#94A3B8', group: 'backlog' } },
+  { id: 'cg-s4', name: '[Story] 오답노트 → SNS 공유 기능 (Social Pulse 연동)', priority: 'medium',
+    state_detail: { name: '백로그', color: '#94A3B8', group: 'backlog' } },
+  { id: 'cg-s5', name: '[Story] 파트너 레퍼럴 링크 → CertiGraph 첫 달 할인 자동 적용', priority: 'high',
+    state_detail: { name: '진행중', color: '#3B82F6', group: 'started' } },
+  // Task
+  { id: 'cg-t1', name: '[Task] SQLite → PostgreSQL 프로덕션 마이그레이션', priority: 'urgent',
+    state_detail: { name: '완료', color: '#22C55E', group: 'completed' } },
+  { id: 'cg-t2', name: '[Task] Upstage OCR 파싱 정확도 95% → 99% 개선', priority: 'high',
+    state_detail: { name: '진행중', color: '#3B82F6', group: 'started' } },
+  { id: 'cg-t3', name: '[Task] 모바일 반응형 CBT UI 개선 (375px 대응)', priority: 'medium',
+    state_detail: { name: '백로그', color: '#94A3B8', group: 'backlog' } },
+  { id: 'cg-t4', name: '[Task] 펀딩 페이지 Toss 결제 버튼 실연동', priority: 'urgent',
+    state_detail: { name: '진행중', color: '#3B82F6', group: 'started' } },
+  { id: 'cg-t5', name: '[Task] 합격자 수기 수집 → Content AI 자동 블로그 생성', priority: 'medium',
+    state_detail: { name: '백로그', color: '#94A3B8', group: 'backlog' } },
+  { id: 'cg-t6', name: '[Task] 뉴스레터 수험생 시퀀스 Mail Rocket 세팅', priority: 'medium',
+    state_detail: { name: '완료', color: '#22C55E', group: 'completed' } },
+];
+
 export default function SaasDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -51,8 +96,14 @@ export default function SaasDetailPage() {
   const [editingFeedbackId, setEditingFeedbackId] = useState<string | null>(null);
   const [replyingToId, setReplyingToId] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState<string>('');
-  const [investorCount] = useState(37); // 임시 값 - 실제로는 API에서 가져와야 함
+  const [investorCount] = useState(37);
   const maxInvestors = 100;
+  const [planeIssues, setPlaneIssues] = useState<PlaneIssue[]>([]);
+  const [planeLoading, setPlaneLoading] = useState(false);
+  const [editingIssueId, setEditingIssueId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<{ name: string; priority: string; group: string }>({ name: '', priority: 'medium', group: 'backlog' });
+  const [addingIssue, setAddingIssue] = useState(false);
+  const [newIssueForm, setNewIssueForm] = useState({ name: '', priority: 'medium', group: 'backlog' });
 
   // 작성자 식별 키 생성/로드
   useEffect(() => {
@@ -67,7 +118,26 @@ export default function SaasDetailPage() {
   useEffect(() => {
     fetchProduct();
     fetchFeedbacks();
+    fetchPlaneIssues();
   }, [params.id]);
+
+  const fetchPlaneIssues = async () => {
+    setPlaneLoading(true);
+    try {
+      const res = await fetch('/api/plane/issues');
+      const data = await res.json();
+      if (data.success && data.data?.length > 0) {
+        setPlaneIssues(data.data);
+      } else {
+        // Plane 응답 없음 → CertiGraph 기획 fallback 이슈
+        setPlaneIssues(CERTIGRAPH_FALLBACK_ISSUES);
+      }
+    } catch {
+      setPlaneIssues(CERTIGRAPH_FALLBACK_ISSUES);
+    } finally {
+      setPlaneLoading(false);
+    }
+  };
 
   const fetchProduct = async () => {
     try {
@@ -99,6 +169,57 @@ export default function SaasDetailPage() {
     } catch (error) {
       console.error('Failed to fetch feedbacks:', error);
     }
+  };
+
+  // Plane 이슈 수정 시작
+  const handleStartEditIssue = (issue: PlaneIssue) => {
+    setEditingIssueId(issue.id);
+    setEditForm({
+      name: issue.name,
+      priority: issue.priority || 'medium',
+      group: issue.state_detail?.group || 'backlog',
+    });
+  };
+
+  // Plane 이슈 수정 저장 (로컬 상태 업데이트)
+  const handleSaveIssue = (id: string) => {
+    const stateMap: Record<string, { name: string; color: string; group: string }> = {
+      completed: { name: '완료', color: '#22C55E', group: 'completed' },
+      started:   { name: '진행중', color: '#3B82F6', group: 'started' },
+      backlog:   { name: '백로그', color: '#94A3B8', group: 'backlog' },
+    };
+    setPlaneIssues((prev) =>
+      prev.map((issue) =>
+        issue.id === id
+          ? { ...issue, name: editForm.name, priority: editForm.priority, state_detail: stateMap[editForm.group] }
+          : issue
+      )
+    );
+    setEditingIssueId(null);
+  };
+
+  // Plane 이슈 삭제
+  const handleDeleteIssue = (id: string) => {
+    setPlaneIssues((prev) => prev.filter((issue) => issue.id !== id));
+  };
+
+  // 새 이슈 추가
+  const handleAddIssue = () => {
+    if (!newIssueForm.name.trim()) return;
+    const stateMap: Record<string, { name: string; color: string; group: string }> = {
+      completed: { name: '완료', color: '#22C55E', group: 'completed' },
+      started:   { name: '진행중', color: '#3B82F6', group: 'started' },
+      backlog:   { name: '백로그', color: '#94A3B8', group: 'backlog' },
+    };
+    const newIssue: PlaneIssue = {
+      id: `local-${Date.now()}`,
+      name: newIssueForm.name,
+      priority: newIssueForm.priority,
+      state_detail: stateMap[newIssueForm.group],
+    };
+    setPlaneIssues((prev) => [newIssue, ...prev]);
+    setNewIssueForm({ name: '', priority: 'medium', group: 'backlog' });
+    setAddingIssue(false);
   };
 
   // 이름 모자이크 처리 함수
@@ -330,6 +451,270 @@ export default function SaasDetailPage() {
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                 {product.overview}
               </p>
+            </motion.div>
+
+            {/* Plane 프로젝트 현황 섹션 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              className="bg-white rounded-2xl shadow-lg p-8 mb-8"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    프로젝트 현황
+                  </h2>
+                  <p className="text-sm text-gray-500 mt-1">Plane 이슈 트래킹 기반 개발 로드맵</p>
+                </div>
+                <button
+                  onClick={() => setAddingIssue(true)}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors shadow-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  이슈 추가
+                </button>
+                {/* 진행률 요약 */}
+                {!planeLoading && (() => {
+                  const done = planeIssues.filter(i => i.state_detail?.group === 'completed').length;
+                  const pct = planeIssues.length > 0 ? Math.round((done / planeIssues.length) * 100) : 0;
+                  return (
+                    <div className="text-right">
+                      <p className="text-3xl font-bold text-blue-600">{pct}%</p>
+                      <p className="text-xs text-gray-500">{done}/{planeIssues.length} 완료</p>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* 진행률 바 */}
+              {!planeLoading && (() => {
+                const done = planeIssues.filter(i => i.state_detail?.group === 'completed').length;
+                const pct = planeIssues.length > 0 ? Math.round((done / planeIssues.length) * 100) : 0;
+                return (
+                  <div className="mb-6">
+                    <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 1, ease: 'easeOut' }}
+                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+                      />
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-400 mt-1.5">
+                      <span>진행 시작</span>
+                      <span>완료</span>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* 상태별 카운트 뱃지 */}
+              {!planeLoading && (
+                <div className="flex flex-wrap gap-3 mb-6">
+                  {[
+                    { group: 'completed', label: '완료', color: 'bg-green-100 text-green-700 border-green-200' },
+                    { group: 'started', label: '진행중', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+                    { group: 'backlog', label: '백로그', color: 'bg-gray-100 text-gray-600 border-gray-200' },
+                  ].map(({ group, label, color }) => {
+                    const cnt = planeIssues.filter(i => i.state_detail?.group === group).length;
+                    return (
+                      <span key={group} className={`px-3 py-1 rounded-full text-sm font-semibold border ${color}`}>
+                        {label} {cnt}건
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* 새 이슈 추가 폼 */}
+              {addingIssue && (
+                <div className="mb-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl space-y-3">
+                  <p className="text-sm font-bold text-blue-800">새 이슈 추가</p>
+                  <input
+                    autoFocus
+                    type="text"
+                    value={newIssueForm.name}
+                    onChange={(e) => setNewIssueForm((f) => ({ ...f, name: e.target.value }))}
+                    placeholder="이슈 제목 입력 (예: [Task] 기능명)"
+                    className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg text-sm focus:outline-none focus:border-blue-500"
+                  />
+                  <div className="flex gap-2">
+                    <select
+                      value={newIssueForm.priority}
+                      onChange={(e) => setNewIssueForm((f) => ({ ...f, priority: e.target.value }))}
+                      className="flex-1 px-3 py-2 border-2 border-blue-200 rounded-lg text-sm focus:outline-none"
+                    >
+                      <option value="urgent">긴급</option>
+                      <option value="high">높음</option>
+                      <option value="medium">보통</option>
+                      <option value="low">낮음</option>
+                    </select>
+                    <select
+                      value={newIssueForm.group}
+                      onChange={(e) => setNewIssueForm((f) => ({ ...f, group: e.target.value }))}
+                      className="flex-1 px-3 py-2 border-2 border-blue-200 rounded-lg text-sm focus:outline-none"
+                    >
+                      <option value="backlog">백로그</option>
+                      <option value="started">진행중</option>
+                      <option value="completed">완료</option>
+                    </select>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={handleAddIssue} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg transition-colors">
+                      추가
+                    </button>
+                    <button onClick={() => { setAddingIssue(false); setNewIssueForm({ name: '', priority: 'medium', group: 'backlog' }); }}
+                      className="flex-1 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition-colors">
+                      취소
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {planeLoading ? (
+                <div className="text-center py-10">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                  <p className="mt-3 text-sm text-gray-500">Plane 데이터 불러오는 중...</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {planeIssues.map((issue) => {
+                    const group = issue.state_detail?.group || 'backlog';
+                    const stateColor = issue.state_detail?.color || '#94A3B8';
+                    const stateName = issue.state_detail?.name || '백로그';
+                    const isEditing = editingIssueId === issue.id;
+
+                    const priorityMap: Record<string, string> = {
+                      urgent: 'bg-red-100 text-red-700',
+                      high: 'bg-orange-100 text-orange-700',
+                      medium: 'bg-yellow-100 text-yellow-700',
+                      low: 'bg-green-100 text-green-700',
+                    };
+                    const priorityLabel: Record<string, string> = {
+                      urgent: '긴급', high: '높음', medium: '보통', low: '낮음',
+                    };
+
+                    // 인라인 편집 모드
+                    if (isEditing) {
+                      return (
+                        <div key={issue.id} className="p-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl space-y-3">
+                          <p className="text-xs font-bold text-yellow-700">이슈 수정</p>
+                          <input
+                            autoFocus
+                            type="text"
+                            value={editForm.name}
+                            onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
+                            className="w-full px-3 py-2 border-2 border-yellow-300 rounded-lg text-sm focus:outline-none focus:border-yellow-500"
+                          />
+                          <div className="flex gap-2">
+                            <select
+                              value={editForm.priority}
+                              onChange={(e) => setEditForm((f) => ({ ...f, priority: e.target.value }))}
+                              className="flex-1 px-3 py-2 border-2 border-yellow-200 rounded-lg text-sm focus:outline-none"
+                            >
+                              <option value="urgent">긴급</option>
+                              <option value="high">높음</option>
+                              <option value="medium">보통</option>
+                              <option value="low">낮음</option>
+                            </select>
+                            <select
+                              value={editForm.group}
+                              onChange={(e) => setEditForm((f) => ({ ...f, group: e.target.value }))}
+                              className="flex-1 px-3 py-2 border-2 border-yellow-200 rounded-lg text-sm focus:outline-none"
+                            >
+                              <option value="backlog">백로그</option>
+                              <option value="started">진행중</option>
+                              <option value="completed">완료</option>
+                            </select>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={() => handleSaveIssue(issue.id)}
+                              className="flex-1 py-2 bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-bold rounded-lg transition-colors">
+                              저장
+                            </button>
+                            <button onClick={() => setEditingIssueId(null)}
+                              className="flex-1 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition-colors">
+                              취소
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    // 일반 표시 모드
+                    return (
+                      <div
+                        key={issue.id}
+                        className={`group flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${
+                          group === 'completed'
+                            ? 'bg-green-50 border-green-100'
+                            : group === 'started'
+                            ? 'bg-blue-50 border-blue-100'
+                            : 'bg-gray-50 border-gray-100'
+                        }`}
+                      >
+                        {/* 상태 점 */}
+                        <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: stateColor }} />
+
+                        {/* 이슈명 */}
+                        <p className={`flex-1 text-sm font-medium ${group === 'completed' ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                          {issue.name}
+                        </p>
+
+                        {/* 상태 배지 */}
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-white border font-semibold"
+                          style={{ color: stateColor, borderColor: stateColor + '40' }}>
+                          {stateName}
+                        </span>
+
+                        {/* 우선순위 배지 */}
+                        {issue.priority && issue.priority !== 'none' && (
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${priorityMap[issue.priority] || 'bg-gray-100 text-gray-600'}`}>
+                            {priorityLabel[issue.priority] || issue.priority}
+                          </span>
+                        )}
+
+                        {/* 수정/삭제 버튼 — hover 시 표시 */}
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleStartEditIssue(issue)}
+                            title="수정"
+                            className="p-1.5 rounded-lg hover:bg-yellow-100 text-gray-400 hover:text-yellow-600 transition-colors"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteIssue(issue.id)}
+                            title="삭제"
+                            className="p-1.5 rounded-lg hover:bg-red-100 text-gray-400 hover:text-red-500 transition-colors"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                              <path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="mt-4 flex items-center gap-2 text-xs text-gray-400">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Plane 프로젝트 기반 실시간 이슈 현황</span>
+              </div>
             </motion.div>
 
             {/* Feedback Section */}

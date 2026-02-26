@@ -1,11 +1,13 @@
 'use client';
 
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Header() {
-  const { isSignedIn, user } = useUser();
+  const { data: session, status } = useSession();
+  const isSignedIn = status === 'authenticated';
 
   return (
     <motion.header
@@ -30,7 +32,7 @@ export default function Header() {
                 SaaS Clinic
               </span>
               <span className="text-sm font-semibold text-primary-600 leading-tight">
-                SocialDoctor's
+                SocialDoctor&apos;s
               </span>
             </div>
           </div>
@@ -43,9 +45,9 @@ export default function Header() {
             <a href="#services" className="text-gray-600 hover:text-primary-600 transition-colors">
               서비스
             </a>
-            <a href="#partners" className="text-gray-600 hover:text-primary-600 transition-colors">
+            <Link href="/partner" className="text-gray-600 hover:text-primary-600 transition-colors">
               파트너
-            </a>
+            </Link>
             <a href="#pricing" className="text-gray-600 hover:text-primary-600 transition-colors">
               요금제
             </a>
@@ -58,30 +60,39 @@ export default function Header() {
           <div className="flex items-center gap-4">
             {!isSignedIn ? (
               <>
-                <SignInButton mode="modal">
-                  <button className="px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors">
-                    로그인
-                  </button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
-                    시작하기
-                  </button>
-                </SignUpButton>
+                <button
+                  onClick={() => signIn('google')}
+                  className="px-4 py-2 text-gray-700 hover:text-primary-600 font-medium transition-colors"
+                >
+                  로그인
+                </button>
+                <button
+                  onClick={() => signIn('google')}
+                  className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                >
+                  시작하기
+                </button>
               </>
             ) : (
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-600 hidden md:block">
-                  환영합니다, {user?.firstName || '회원'}님
+                  환영합니다, {session?.user?.name?.split(' ')[0] || '회원'}님
                 </span>
-                <UserButton
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-10 h-10"
-                    }
-                  }}
-                />
+                {session?.user?.image && (
+                  <Image
+                    src={session.user.image}
+                    alt="프로필"
+                    width={40}
+                    height={40}
+                    className="rounded-full border-2 border-primary-200"
+                  />
+                )}
+                <button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 font-medium transition-colors"
+                >
+                  로그아웃
+                </button>
               </div>
             )}
           </div>

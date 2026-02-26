@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Service {
   id: number;
@@ -15,16 +16,18 @@ interface Service {
   useCases: string[];
   benefits: string[];
   pricing: string;
+  appPath?: string;
 }
 
 const services: Service[] = [
   {
     id: 1,
-    title: "마케팅 자동화",
+    title: "Social Pulse",
     description: "소셜 미디어 콘텐츠 자동 생성 및 예약",
     icon: "📱",
     color: "from-blue-500 to-cyan-500",
     size: "large",
+    appPath: "/saas/apps/social-pulse",
     detailedDescription: `마케팅 자동화 플랫폼은 소셜 미디어 마케팅의 모든 과정을 자동화하여 시간과 비용을 절약합니다.
 
 AI 기반 콘텐츠 생성 엔진이 브랜드 톤에 맞는 매력적인 콘텐츠를 자동으로 생성하고, 최적의 게시 시간을 분석하여 예약 게시합니다.
@@ -45,11 +48,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 2,
-    title: "파트너 관리",
+    title: "Partner Hub",
     description: "제휴사 및 인플루언서 협업 시스템",
     icon: "🤝",
     color: "from-purple-500 to-pink-500",
     size: "medium",
+    appPath: "/saas/apps/partner-hub",
     detailedDescription: `파트너 관리 플랫폼은 제휴 마케팅과 인플루언서 협업을 효율적으로 관리하는 통합 솔루션입니다.
 
 각 파트너에게 전용 대시보드를 제공하여 실시간으로 추천 링크 클릭, 가입 전환, 매출 발생을 추적할 수 있습니다.
@@ -70,11 +74,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 3,
-    title: "AI 콘텐츠",
+    title: "Content AI",
     description: "GPT 기반 카피라이팅",
     icon: "✨",
     color: "from-amber-500 to-orange-500",
     size: "small",
+    appPath: "/saas/apps/content-ai",
     detailedDescription: `GPT 기반 AI 콘텐츠 생성 도구로 블로그, SNS, 광고 문구를 즉시 생성합니다. 브랜드 톤을 학습하여 일관된 메시지를 전달합니다.`,
     features: ['다국어 지원', '브랜드 톤 학습', '무제한 생성', 'SEO 최적화'],
     useCases: ['블로그 포스트 작성', 'SNS 콘텐츠 생성', '광고 카피 제작'],
@@ -83,11 +88,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 4,
-    title: "분석 대시보드",
+    title: "Insight Board",
     description: "실시간 성과 추적 및 인사이트",
     icon: "📊",
     color: "from-green-500 to-emerald-500",
     size: "medium",
+    appPath: "/saas/apps/insight-board",
     detailedDescription: `비즈니스의 모든 데이터를 통합하여 실시간으로 시각화하는 강력한 BI 도구입니다. AI 기반 예측 분석으로 미래 트렌드를 파악합니다.`,
     features: ['실시간 모니터링', '맞춤형 리포트', '예측 분석', '통합 대시보드'],
     useCases: ['경영진 성과 대시보드', '마케팅 ROI 추적', '매출 예측'],
@@ -96,11 +102,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 5,
-    title: "고객 관리",
+    title: "CRM Pro",
     description: "CRM 및 커뮤니케이션",
     icon: "👥",
     color: "from-red-500 to-rose-500",
     size: "small",
+    appPath: "/saas/apps/crm-pro",
     detailedDescription: `고객과의 모든 접점을 관리하는 CRM 시스템입니다. 자동화된 커뮤니케이션으로 고객 만족도를 높입니다.`,
     features: ['고객 세그먼트', '자동 응답', '구매 이력 관리', '로열티 프로그램'],
     useCases: ['고객 데이터 통합 관리', '자동화된 고객 응대', '로열티 프로그램 운영'],
@@ -109,11 +116,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 6,
-    title: "결제 시스템",
+    title: "Pay Flow",
     description: "통합 결제 및 정산 관리",
     icon: "💳",
     color: "from-indigo-500 to-blue-500",
     size: "medium",
+    appPath: "/saas/apps/pay-flow",
     detailedDescription: `다양한 결제 수단을 지원하는 통합 결제 시스템입니다. 자동 정산과 세금 계산으로 업무를 간소화합니다.`,
     features: ['멀티 결제 지원', '자동 정산', '세금 계산', '환불 관리'],
     useCases: ['온라인 결제 처리', '정기 구독 관리', '자동 정산 처리'],
@@ -122,11 +130,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 7,
-    title: "이메일 마케팅",
+    title: "Mail Rocket",
     description: "자동화된 이메일 캠페인",
     icon: "📧",
     color: "from-teal-500 to-cyan-500",
     size: "small",
+    appPath: "/saas/apps/mail-rocket",
     detailedDescription: `자동화된 이메일 마케팅으로 고객과 효과적으로 소통합니다. A/B 테스트로 전환율을 최적화합니다.`,
     features: ['드래그 앤 드롭 에디터', '자동화 워크플로우', 'A/B 테스팅', '상세 분석'],
     useCases: ['환영 이메일 자동 발송', '장바구니 이탈 방지', '뉴스레터 발송'],
@@ -135,11 +144,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 8,
-    title: "SEO 최적화",
-    description: "검색 엔진 최적화 도구",
+    title: "Shop Builder",
+    description: "노코드 쇼핑몰 구축 플랫폼",
     icon: "🔍",
     color: "from-violet-500 to-purple-500",
     size: "small",
+    appPath: "/saas/apps/shop-builder",
     detailedDescription: `검색 엔진 최적화 도구로 웹사이트 순위를 향상시킵니다. 키워드 분석과 백링크 추적을 제공합니다.`,
     features: ['키워드 리서치', '순위 추적', '기술 SEO 감사', '백링크 분석'],
     useCases: ['키워드 순위 모니터링', 'SEO 문제 자동 감지', '경쟁사 분석'],
@@ -148,11 +158,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 9,
-    title: "프로젝트 관리",
-    description: "업무 협업 및 일정 관리",
+    title: "Form Wizard",
+    description: "AI 폼 & 설문 빌더",
     icon: "📋",
     color: "from-slate-500 to-gray-500",
     size: "medium",
+    appPath: "/saas/apps/form-wizard",
     detailedDescription: `팀 협업과 일정 관리를 한 곳에서 해결합니다. 칸반 보드, 간트 차트로 프로젝트를 체계적으로 관리합니다.`,
     features: ['칸반 보드', '간트 차트', '시간 추적', '팀 협업'],
     useCases: ['프로젝트 진행 상황 추적', '팀 업무 배분', '일정 관리'],
@@ -161,11 +172,12 @@ Facebook, Instagram, Twitter, LinkedIn 등 주요 소셜 미디어 플랫폼을 
   },
   {
     id: 10,
-    title: "커뮤니티",
-    description: "회원 커뮤니티 플랫폼",
+    title: "Task Flow",
+    description: "AI 팀 프로젝트 관리 툴",
     icon: "💬",
     color: "from-pink-500 to-rose-500",
     size: "large",
+    appPath: "/saas/apps/task-flow",
     detailedDescription: `회원 커뮤니티 플랫폼으로 고객 참여를 유도합니다. 포럼, 이벤트, 멤버십 관리 기능을 제공합니다.`,
     features: ['포럼 관리', '이벤트 캘린더', '멤버십 등급', '포인트 시스템'],
     useCases: ['고객 커뮤니티 운영', '이벤트 관리', '멤버십 프로그램'],
@@ -196,10 +208,15 @@ const itemVariants = {
 };
 
 export default function BentoGrid() {
+  const router = useRouter();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleServiceClick = (service: Service) => {
+    if (service.appPath) {
+      router.push(service.appPath);
+      return;
+    }
     setSelectedService(service);
     setIsModalOpen(true);
   };

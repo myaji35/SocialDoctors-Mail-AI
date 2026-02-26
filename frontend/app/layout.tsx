@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from '@clerk/nextjs';
 import "./globals.css";
+import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 
 export const metadata: Metadata = {
   title: "SocialDoctors - 비즈니스를 치료하는 SaaS 클리닉",
@@ -15,16 +15,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 빌드 시 환경 변수가 없을 경우 빈 문자열 사용 (런타임에 재설정됨)
-  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
-
   return (
-    <ClerkProvider publishableKey={publishableKey}>
-      <html lang="ko">
-        <body className="antialiased">
+    <html lang="ko">
+      <body className="antialiased">
+        <SessionProviderWrapper>
           {children}
-        </body>
-      </html>
-    </ClerkProvider>
+        </SessionProviderWrapper>
+      </body>
+    </html>
   );
 }

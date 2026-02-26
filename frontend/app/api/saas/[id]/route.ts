@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { SaasStore } from '@/lib/saas-store';
@@ -55,7 +56,10 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, overview, url, partners, category, planeIssueId, planeProjectId, thumbnail } = body;
+    const {
+      name, overview, url, partners, category, planeIssueId, planeProjectId, thumbnail,
+      testUrl, launchDate, fundingTarget, fundingRaised, fundingEquity,
+    } = body;
 
     // 제품 업데이트 (Prisma 시도, 실패 시 파일 기반 fallback)
     let updatedProduct;
@@ -71,6 +75,11 @@ export async function PUT(
           thumbnail,
           planeIssueId,
           planeProjectId,
+          testUrl: testUrl ?? null,
+          launchDate: launchDate ? new Date(launchDate) : null,
+          fundingTarget: fundingTarget != null ? Number(fundingTarget) : null,
+          fundingRaised: fundingRaised != null ? Number(fundingRaised) : 0,
+          fundingEquity: fundingEquity != null ? Number(fundingEquity) : null,
         },
       });
     } catch (dbError: any) {
