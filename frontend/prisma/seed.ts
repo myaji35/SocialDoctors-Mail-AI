@@ -142,6 +142,31 @@ async function main() {
     });
     console.log('📣 타운인 테스트 SNS 채널 생성 완료');
   }
+
+  // CertiGraph SNS 채널 시드
+  const existingCertigraphChannel = await prisma.snsChannel.findFirst({
+    where: { clientSlug: 'certigraph' },
+  });
+  if (!existingCertigraphChannel) {
+    await prisma.snsChannel.create({
+      data: {
+        clientName: 'CertiGraph',
+        clientSlug: 'certigraph',
+        platform: 'FACEBOOK',
+        channelName: 'CertiGraph 공식',
+        pageId: 'CERTIGRAPH_PAGE_ID_HERE',
+        accessToken: 'MOCK_TOKEN_PLACEHOLDER',
+        status: 'ACTIVE',
+        metadata: {
+          note: 'CertiGraph 연동 채널 - 실제 Meta 토큰 입력 필요',
+          callerApp: '0015_certigraph',
+          sourceAppUrl: 'https://exams.townin.net',
+          sourceAppName: 'CertiGraph',
+        },
+      },
+    });
+    console.log('📣 CertiGraph SNS 채널 생성 완료');
+  }
 }
 
 main()
