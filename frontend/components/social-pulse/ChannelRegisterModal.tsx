@@ -8,7 +8,7 @@ interface ChannelRegisterModalProps {
 }
 
 /* ── 지원 플랫폼 정의 ─────────────────────────────── */
-const PLATFORMS = [
+export const PLATFORMS = [
   {
     id: 'FACEBOOK',
     label: 'Facebook',
@@ -187,7 +187,7 @@ const FacebookPageIdGuide = () => (
   </div>
 );
 
-const FacebookTokenGuide = () => (
+export const FacebookTokenGuide = () => (
   <div className="space-y-4 text-sm text-gray-700">
     <p className="font-semibold text-gray-900">Facebook 페이지 액세스 토큰 발급 방법</p>
 

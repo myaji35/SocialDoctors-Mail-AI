@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import PostStatusBadge from '@/components/social-pulse/PostStatusBadge';
 import ChannelRegisterModal from '@/components/social-pulse/ChannelRegisterModal';
+import ChannelEditModal from '@/components/social-pulse/ChannelEditModal';
 import PostComposer from '@/components/social-pulse/PostComposer';
 
 interface SnsChannel {
@@ -73,6 +74,7 @@ export default function SocialPulsePage() {
   const [posts, setPosts] = useState<SocialPost[]>([]);
   const [selectedClientSlug, setSelectedClientSlug] = useState<string | null>(null);
   const [showChannelModal, setShowChannelModal] = useState(false);
+  const [editingChannel, setEditingChannel] = useState<SnsChannel | null>(null);
   const [showComposer, setShowComposer] = useState(false);
   const [activeTab, setActiveTab] = useState<'ALL' | 'PUBLISHED' | 'SCHEDULED' | 'FAILED' | 'DRAFT'>('ALL');
   const [loading, setLoading] = useState(true);
@@ -239,6 +241,16 @@ export default function SocialPulsePage() {
                       <p className="text-xs text-gray-500">{channel.clientName}</p>
                     </div>
                     <button
+                      onClick={() => setEditingChannel(channel)}
+                      className="opacity-0 group-hover:opacity-100 w-6 h-6 flex items-center justify-center rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-all shrink-0"
+                      title="채널 편집"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    <button
                       onClick={() => handleToggleChannel(channel)}
                       className={`w-9 h-5 rounded-full transition-colors shrink-0 ${
                         channel.status === 'ACTIVE' ? 'bg-green-500' : 'bg-gray-300'
@@ -360,6 +372,17 @@ export default function SocialPulsePage() {
           onSuccess={() => {
             loadChannels();
             showToast('채널이 등록되었습니다.');
+          }}
+        />
+      )}
+
+      {editingChannel && (
+        <ChannelEditModal
+          channel={editingChannel}
+          onClose={() => setEditingChannel(null)}
+          onSuccess={() => {
+            loadChannels();
+            showToast('채널 정보가 수정되었습니다.');
           }}
         />
       )}
