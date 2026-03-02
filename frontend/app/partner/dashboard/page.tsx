@@ -64,7 +64,13 @@ export default function PartnerDashboardPage() {
     }
   };
 
-  if (loading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16325C' }}>로딩 중...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-[#16325C] text-base">
+        로딩 중...
+      </div>
+    );
+  }
   if (!data) return null;
 
   const statCards = [
@@ -75,22 +81,22 @@ export default function PartnerDashboardPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F3F2F2' }}>
+    <div className="min-h-screen bg-[#F3F2F2]">
       {/* Header */}
-      <div style={{ background: '#16325C', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ color: '#00A1E0', fontWeight: 700, fontSize: '18px' }}>SocialDoctors</span>
-        <span style={{ color: '#fff', fontSize: '14px' }}>{data.partner.name} 파트너 대시보드</span>
+      <div className="bg-[#16325C] px-6 sm:px-8 py-4 flex items-center justify-between">
+        <span className="text-[#00A1E0] font-bold text-lg">SocialDoctors</span>
+        <span className="text-white text-sm">{data.partner.name} 파트너 대시보드</span>
       </div>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
+      <div className="max-w-5xl mx-auto px-6 py-8">
 
         {/* PENDING 상태 배너 */}
         {data.partner.status === 'PENDING' && (
-          <div style={{ background: '#FFF8E1', border: '1.5px solid #F6C84B', borderRadius: '8px', padding: '16px 24px', marginBottom: '20px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#F39C12" strokeWidth={2} style={{ width: '20px', height: '20px', flexShrink: 0, marginTop: '2px' }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl px-6 py-4 mb-6 flex items-start gap-3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F39C12" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             <div>
-              <div style={{ fontWeight: 700, color: '#856404', marginBottom: '4px' }}>파트너 심사 중입니다</div>
-              <div style={{ fontSize: '13px', color: '#997404' }}>
+              <div className="font-bold text-yellow-800 mb-1">파트너 심사 중입니다</div>
+              <div className="text-sm text-yellow-700 leading-relaxed">
                 신청이 접수되었습니다. 영업일 1~3일 내에 검토 후 이메일로 결과를 안내드립니다.
                 승인 완료 전까지는 소개 링크가 비활성화됩니다.
               </div>
@@ -100,64 +106,85 @@ export default function PartnerDashboardPage() {
 
         {/* SUSPENDED 상태 배너 */}
         {data.partner.status === 'SUSPENDED' && (
-          <div style={{ background: '#FFF0F0', border: '1.5px solid #F5C6CB', borderRadius: '8px', padding: '16px 24px', marginBottom: '20px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#DC3545" strokeWidth={2} style={{ width: '20px', height: '20px', flexShrink: 0, marginTop: '2px' }}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl px-6 py-4 mb-6 flex items-start gap-3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#DC3545" strokeWidth={2} className="w-5 h-5 shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
             <div>
-              <div style={{ fontWeight: 700, color: '#721C24', marginBottom: '4px' }}>계정이 정지되었습니다</div>
-              <div style={{ fontSize: '13px', color: '#842029' }}>자세한 사항은 support@socialdoctors.co.kr 로 문의해 주세요.</div>
+              <div className="font-bold text-red-800 mb-1">계정이 정지되었습니다</div>
+              <div className="text-sm text-red-700">자세한 사항은 support@socialdoctors.co.kr 로 문의해 주세요.</div>
             </div>
           </div>
         )}
 
         {/* 정산 결과 메시지 */}
         {settlementMsg && (
-          <div style={{ background: settlementMsg.type === 'success' ? '#D4EDDA' : '#F8D7DA', border: `1.5px solid ${settlementMsg.type === 'success' ? '#C3E6CB' : '#F5C6CB'}`, borderRadius: '8px', padding: '14px 20px', marginBottom: '20px', fontSize: '14px', color: settlementMsg.type === 'success' ? '#155724' : '#721C24', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className={`rounded-xl px-6 py-4 mb-6 text-sm flex justify-between items-center ${
+            settlementMsg.type === 'success'
+              ? 'bg-green-50 border-2 border-green-200 text-green-800'
+              : 'bg-red-50 border-2 border-red-200 text-red-800'
+          }`}>
             <span>{settlementMsg.text}</span>
-            <button onClick={() => setSettlementMsg(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#888' }}>×</button>
+            <button onClick={() => setSettlementMsg(null)} className="text-lg text-gray-500 hover:text-gray-700 ml-4">
+              &times;
+            </button>
           </div>
         )}
 
         {/* 소개 링크 */}
-        <div style={{ background: '#fff', borderRadius: '8px', padding: '20px 24px', marginBottom: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)', opacity: data.partner.status !== 'ACTIVE' ? 0.6 : 1 }}>
-          <div style={{ fontSize: '13px', color: '#888', marginBottom: '8px', fontWeight: 600 }}>내 소개 링크</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ flex: 1, background: '#F3F2F2', borderRadius: '6px', padding: '10px 14px', fontSize: '14px', color: '#16325C', fontFamily: 'monospace', filter: data.partner.status !== 'ACTIVE' ? 'blur(4px)' : 'none', userSelect: data.partner.status !== 'ACTIVE' ? 'none' : 'auto' }}>
+        <div className={`bg-white rounded-xl p-6 mb-6 shadow-sm ${data.partner.status !== 'ACTIVE' ? 'opacity-60' : ''}`}>
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">내 소개 링크</div>
+          <div className="flex items-center gap-3">
+            <div className={`flex-1 bg-gray-100 rounded-lg px-4 py-3 text-sm text-[#16325C] font-mono ${
+              data.partner.status !== 'ACTIVE' ? 'blur-sm select-none' : ''
+            }`}>
               {data.partner.referralUrl}
             </div>
             <button
               onClick={copyLink}
               disabled={data.partner.status !== 'ACTIVE'}
-              style={{ background: data.partner.status !== 'ACTIVE' ? '#ccc' : copied ? '#28a745' : '#00A1E0', color: '#fff', border: 'none', borderRadius: '6px', padding: '10px 20px', cursor: data.partner.status !== 'ACTIVE' ? 'not-allowed' : 'pointer', fontWeight: 600, fontSize: '14px', whiteSpace: 'nowrap' }}
+              className={`shrink-0 rounded-lg px-6 py-3 text-sm font-semibold text-white transition-colors ${
+                data.partner.status !== 'ACTIVE'
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : copied
+                    ? 'bg-green-600'
+                    : 'bg-[#00A1E0] hover:bg-[#0090C8]'
+              }`}
             >
               {data.partner.status !== 'ACTIVE' ? '승인 후 활성화' : copied ? '복사됨!' : '링크 복사'}
             </button>
           </div>
-          <div style={{ marginTop: '8px', fontSize: '12px', color: '#aaa' }}>
-            상태: <span style={{ color: data.partner.status === 'ACTIVE' ? '#28a745' : data.partner.status === 'PENDING' ? '#f39c12' : '#dc3545', fontWeight: 600 }}>{data.partner.status === 'ACTIVE' ? '활성' : data.partner.status === 'PENDING' ? '승인 대기중' : '정지됨'}</span>
+          <div className="mt-2 text-xs text-gray-500">
+            상태:{' '}
+            <span className={`font-semibold ${
+              data.partner.status === 'ACTIVE' ? 'text-green-600' :
+              data.partner.status === 'PENDING' ? 'text-yellow-600' : 'text-red-600'
+            }`}>
+              {data.partner.status === 'ACTIVE' ? '활성' : data.partner.status === 'PENDING' ? '승인 대기중' : '정지됨'}
+            </span>
           </div>
         </div>
 
         {/* KPI 카드 */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {statCards.map((card) => (
-            <div key={card.label} style={{ background: '#fff', borderRadius: '8px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
-              <div style={{ fontSize: '12px', color: '#888', marginBottom: '8px', fontWeight: 600 }}>{card.label}</div>
-              <div style={{ fontSize: '28px', fontWeight: 700, color: '#16325C' }}>
-                {card.value}<span style={{ fontSize: '14px', color: '#888', marginLeft: '4px' }}>{card.unit}</span>
+            <div key={card.label} className="bg-white rounded-xl p-5 shadow-sm">
+              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{card.label}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#16325C]">
+                {card.value}
+                <span className="text-sm text-gray-500 ml-1 font-normal">{card.unit}</span>
               </div>
             </div>
           ))}
         </div>
 
         {/* 차트 */}
-        <div style={{ background: '#fff', borderRadius: '8px', padding: '24px', marginBottom: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
-          <div style={{ fontSize: '14px', fontWeight: 700, color: '#16325C', marginBottom: '20px' }}>최근 30일 클릭 / 가입 추이</div>
+        <div className="bg-white rounded-xl p-6 mb-6 shadow-sm">
+          <div className="text-sm font-bold text-[#16325C] mb-5">최근 30일 클릭 / 가입 추이</div>
           {data.clicksChart.length > 0 ? (
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={240}>
               <LineChart data={data.clicksChart}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="clicks" stroke="#00A1E0" strokeWidth={2} name="클릭" dot={false} />
@@ -165,39 +192,39 @@ export default function PartnerDashboardPage() {
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb' }}>
+            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">
               아직 클릭 데이터가 없습니다.
             </div>
           )}
         </div>
 
         {/* 정산 */}
-        <div style={{ background: '#fff', borderRadius: '8px', padding: '20px 24px', marginBottom: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="bg-white rounded-xl p-6 mb-6 shadow-sm">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <span style={{ fontSize: '13px', color: '#888', fontWeight: 600 }}>출금 가능 잔액</span>
-              <span style={{ fontSize: '24px', fontWeight: 700, color: '#16325C', marginLeft: '12px' }}>
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">출금 가능 잔액</span>
+              <span className="text-2xl font-bold text-[#16325C] ml-3">
                 ₩{data.stats.currentBalance.toLocaleString()}
               </span>
-              <span style={{ fontSize: '13px', color: '#aaa', marginLeft: '16px' }}>
+              <span className="text-sm text-gray-500 ml-4">
                 정산 대기: ₩{data.stats.pendingAmount.toLocaleString()}
               </span>
             </div>
             <button
               onClick={() => setShowSettlement(!showSettlement)}
-              style={{ background: '#16325C', color: '#fff', border: 'none', borderRadius: '6px', padding: '10px 20px', cursor: 'pointer', fontWeight: 600 }}
+              className="bg-[#16325C] hover:bg-[#0e2445] text-white rounded-lg px-6 py-2.5 text-sm font-semibold transition-colors"
             >
               정산 신청
             </button>
           </div>
 
           {showSettlement && (
-            <form onSubmit={handleSettlement} style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <input required placeholder="신청 금액 (원)" value={settlement.amount} onChange={(e) => setSettlement({ ...settlement, amount: e.target.value })} style={{ padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px' }} />
-              <input required placeholder="은행명" value={settlement.bankName} onChange={(e) => setSettlement({ ...settlement, bankName: e.target.value })} style={{ padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px' }} />
-              <input required placeholder="계좌번호" value={settlement.accountNumber} onChange={(e) => setSettlement({ ...settlement, accountNumber: e.target.value })} style={{ padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px' }} />
-              <input required placeholder="예금주" value={settlement.accountHolder} onChange={(e) => setSettlement({ ...settlement, accountHolder: e.target.value })} style={{ padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px' }} />
-              <button type="submit" style={{ gridColumn: '1 / -1', background: '#00A1E0', color: '#fff', border: 'none', borderRadius: '6px', padding: '12px', fontWeight: 600, cursor: 'pointer' }}>
+            <form onSubmit={handleSettlement} className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input required placeholder="신청 금액 (원)" value={settlement.amount} onChange={(e) => setSettlement({ ...settlement, amount: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="은행명" value={settlement.bankName} onChange={(e) => setSettlement({ ...settlement, bankName: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="계좌번호" value={settlement.accountNumber} onChange={(e) => setSettlement({ ...settlement, accountNumber: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="예금주" value={settlement.accountHolder} onChange={(e) => setSettlement({ ...settlement, accountHolder: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <button type="submit" className="sm:col-span-2 bg-[#00A1E0] hover:bg-[#0090C8] text-white rounded-lg py-3 text-sm font-semibold transition-colors">
                 정산 신청하기
               </button>
             </form>
@@ -205,35 +232,39 @@ export default function PartnerDashboardPage() {
         </div>
 
         {/* 최근 수수료 내역 */}
-        <div style={{ background: '#fff', borderRadius: '8px', padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
-          <div style={{ fontSize: '14px', fontWeight: 700, color: '#16325C', marginBottom: '16px' }}>최근 수수료 내역</div>
+        <div className="bg-white rounded-xl p-6 shadow-sm">
+          <div className="text-sm font-bold text-[#16325C] mb-5">최근 수수료 내역</div>
           {data.recentTransactions.length === 0 ? (
-            <div style={{ color: '#bbb', textAlign: 'center', padding: '24px' }}>아직 수수료 내역이 없습니다.</div>
+            <div className="text-gray-400 text-center py-8 text-sm">아직 수수료 내역이 없습니다.</div>
           ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-              <thead>
-                <tr style={{ borderBottom: '2px solid #F3F2F2' }}>
-                  {['날짜', '서비스', '결제액', '수수료', '상태'].map((h) => (
-                    <th key={h} style={{ textAlign: 'left', padding: '8px 12px', color: '#888', fontWeight: 600 }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.recentTransactions.map((tx) => (
-                  <tr key={tx.id} style={{ borderBottom: '1px solid #F3F2F2' }}>
-                    <td style={{ padding: '10px 12px', color: '#555' }}>{new Date(tx.createdAt).toLocaleDateString('ko-KR')}</td>
-                    <td style={{ padding: '10px 12px', color: '#16325C', fontWeight: 500 }}>{tx.serviceName}</td>
-                    <td style={{ padding: '10px 12px' }}>₩{tx.paymentAmount.toLocaleString()}</td>
-                    <td style={{ padding: '10px 12px', color: '#00A1E0', fontWeight: 600 }}>+₩{tx.commissionAmount.toLocaleString()}</td>
-                    <td style={{ padding: '10px 12px' }}>
-                      <span style={{ background: tx.status === 'CONFIRMED' ? '#e8f5e9' : '#fff8e1', color: tx.status === 'CONFIRMED' ? '#2e7d32' : '#f57f17', borderRadius: '4px', padding: '3px 8px', fontSize: '12px', fontWeight: 600 }}>
-                        {tx.status === 'CONFIRMED' ? '확정' : tx.status === 'PAID' ? '지급완료' : '대기'}
-                      </span>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b-2 border-gray-100">
+                    {['날짜', '서비스', '결제액', '수수료', '상태'].map((h) => (
+                      <th key={h} className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.recentTransactions.map((tx) => (
+                    <tr key={tx.id} className="border-b border-gray-50 hover:bg-gray-50">
+                      <td className="py-3 px-4 text-gray-600">{new Date(tx.createdAt).toLocaleDateString('ko-KR')}</td>
+                      <td className="py-3 px-4 text-[#16325C] font-medium">{tx.serviceName}</td>
+                      <td className="py-3 px-4">₩{tx.paymentAmount.toLocaleString()}</td>
+                      <td className="py-3 px-4 text-[#00A1E0] font-semibold">+₩{tx.commissionAmount.toLocaleString()}</td>
+                      <td className="py-3 px-4">
+                        <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold ${
+                          tx.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {tx.status === 'CONFIRMED' ? '확정' : tx.status === 'PAID' ? '지급완료' : '대기'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

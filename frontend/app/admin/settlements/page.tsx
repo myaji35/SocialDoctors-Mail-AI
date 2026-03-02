@@ -118,29 +118,29 @@ export default function AdminSettlementsPage() {
             {filter ? `${STATUS_LABELS[filter]?.label} 상태의 정산 요청이 없습니다.` : '정산 요청이 없습니다.'}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {settlements.map((s) => (
-              <div key={s.id} className="bg-white rounded-xl border border-gray-200 p-5">
-                <div className="flex items-start justify-between">
+              <div key={s.id} className="bg-white rounded-xl border border-gray-200 p-6">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-4">
-                    <div>
-                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${STATUS_LABELS[s.status]?.className}`}>
+                    <div className="pt-0.5">
+                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_LABELS[s.status]?.className}`}>
                         {STATUS_LABELS[s.status]?.label}
                       </span>
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900 text-lg">₩{s.amount.toLocaleString()}</p>
-                      <p className="text-sm text-gray-600 mt-0.5">
+                      <p className="font-bold text-gray-900 text-xl">₩{s.amount.toLocaleString()}</p>
+                      <p className="text-sm text-gray-600 mt-1">
                         {s.wallet.partner.name} ({s.wallet.partner.email})
                       </p>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-gray-500 mt-1.5">
                         {s.bankName} {s.accountNumber} · {s.accountHolder}
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-xs text-gray-400 mt-2">
                         신청일: {new Date(s.createdAt).toLocaleDateString('ko-KR')}
                         {s.processedAt && ` · 처리일: ${new Date(s.processedAt).toLocaleDateString('ko-KR')}`}
                       </p>
-                      {s.memo && <p className="text-xs text-gray-500 mt-1 italic">메모: {s.memo}</p>}
+                      {s.memo && <p className="text-sm text-gray-500 mt-1.5 italic">메모: {s.memo}</p>}
                     </div>
                   </div>
 
@@ -149,7 +149,7 @@ export default function AdminSettlementsPage() {
                       <button
                         onClick={() => handleProcess(s.id, 'COMPLETED')}
                         disabled={processingId === s.id}
-                        className="px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+                        className="px-5 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
                       >
                         {processingId === s.id ? '처리중...' : '승인'}
                       </button>
@@ -159,7 +159,7 @@ export default function AdminSettlementsPage() {
                           if (memo !== null) handleProcess(s.id, 'REJECTED', memo);
                         }}
                         disabled={processingId === s.id}
-                        className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors"
+                        className="px-5 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors"
                       >
                         거절
                       </button>

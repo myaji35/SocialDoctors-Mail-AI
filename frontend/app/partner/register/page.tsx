@@ -15,7 +15,6 @@ export default function PartnerRegisterPage() {
     if (status === 'unauthenticated') {
       router.push('/sign-in?callbackUrl=/partner/register');
     }
-    // 세션에서 이름 자동 채우기
     if (status === 'authenticated' && session?.user?.name && !form.name) {
       setForm((f) => ({ ...f, name: session.user.name ?? '' }));
     }
@@ -48,17 +47,17 @@ export default function PartnerRegisterPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F3F2F2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ background: '#fff', borderRadius: '12px', padding: '40px', width: '100%', maxWidth: '480px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#16325C', marginBottom: '8px' }}>파트너 신청</h1>
-        <p style={{ color: '#888', fontSize: '14px', marginBottom: '28px' }}>
+    <div className="min-h-screen bg-[#F3F2F2] flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl p-8 sm:p-10 w-full max-w-lg shadow-lg">
+        <h1 className="text-2xl font-bold text-[#16325C] mb-2">파트너 신청</h1>
+        <p className="text-gray-500 text-sm mb-8 leading-relaxed">
           신청 후 검토를 거쳐 승인되면 소개 링크가 활성화됩니다.
         </p>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#16325C', marginBottom: '6px' }}>
-              이름 *
+            <label className="block text-sm font-semibold text-[#16325C] mb-2">
+              이름 <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -66,12 +65,12 @@ export default function PartnerRegisterPage() {
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
               placeholder="홍길동"
-              style={{ width: '100%', padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#16325C', marginBottom: '6px' }}>
+            <label className="block text-sm font-semibold text-[#16325C] mb-2">
               연락처
             </label>
             <input
@@ -79,12 +78,12 @@ export default function PartnerRegisterPage() {
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               placeholder="010-0000-0000"
-              style={{ width: '100%', padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#16325C', marginBottom: '6px' }}>
+            <label className="block text-sm font-semibold text-[#16325C] mb-2">
               소개 (활동 방식, 채널 등)
             </label>
             <textarea
@@ -92,12 +91,12 @@ export default function PartnerRegisterPage() {
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
               placeholder="어떤 방식으로 홍보할 계획인지 알려주세요..."
               rows={4}
-              style={{ width: '100%', padding: '10px 14px', border: '1.5px solid #ddd', borderRadius: '6px', fontSize: '14px', resize: 'vertical', boxSizing: 'border-box' }}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm resize-vertical focus:border-[#00A1E0] focus:outline-none transition-colors"
             />
           </div>
 
           {error && (
-            <div style={{ background: '#fff0f0', border: '1px solid #ffcccc', borderRadius: '6px', padding: '10px 14px', color: '#cc0000', fontSize: '14px' }}>
+            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm">
               {error}
             </div>
           )}
@@ -105,17 +104,7 @@ export default function PartnerRegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            style={{
-              background: loading ? '#aaa' : '#00A1E0',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '13px',
-              fontSize: '15px',
-              fontWeight: 600,
-              cursor: loading ? 'not-allowed' : 'pointer',
-              marginTop: '8px',
-            }}
+            className="w-full bg-[#00A1E0] hover:bg-[#0090C8] disabled:bg-gray-400 text-white rounded-lg py-3.5 text-base font-semibold transition-colors disabled:cursor-not-allowed mt-2"
           >
             {loading ? '신청 중...' : '파트너 신청하기'}
           </button>

@@ -115,37 +115,37 @@ export default function AdminPartnersPage() {
               <thead className="bg-gray-50">
                 <tr>
                   {['이름/이메일', '레퍼럴 코드', '클릭/가입', '총 수익', '잔액', '상태', '관리'].map((h) => (
-                    <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{h}</th>
+                    <th key={h} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {partners.map((p) => (
                   <tr key={p.id} className="hover:bg-gray-50">
-                    <td className="px-5 py-4">
+                    <td className="px-6 py-4">
                       <p className="font-medium text-gray-900 text-sm">{p.name}</p>
-                      <p className="text-xs text-gray-500">{p.email}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{p.email}</p>
                     </td>
-                    <td className="px-5 py-4 font-mono text-sm text-gray-700">{p.referralCode}</td>
-                    <td className="px-5 py-4 text-sm text-gray-700">
+                    <td className="px-6 py-4 font-mono text-sm text-gray-700">{p.referralCode}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
                       {p._count?.clicks ?? 0} / {p._count?.referredUsers ?? 0}
                     </td>
-                    <td className="px-5 py-4 text-sm font-semibold text-gray-900">
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                       ₩{(p.wallet?.totalEarned ?? 0).toLocaleString()}
                     </td>
-                    <td className="px-5 py-4 text-sm text-blue-600 font-semibold">
+                    <td className="px-6 py-4 text-sm text-blue-600 font-semibold">
                       ₩{(p.wallet?.currentBalance ?? 0).toLocaleString()}
                     </td>
-                    <td className="px-5 py-4">
-                      <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${STATUS_LABELS[p.status]?.className}`}>
+                    <td className="px-6 py-4">
+                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_LABELS[p.status]?.className}`}>
                         {STATUS_LABELS[p.status]?.label}
                       </span>
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-6 py-4">
                       <select
                         value={p.status}
                         onChange={(e) => handleStatusChange(p.id, e.target.value)}
-                        className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="PENDING">심사중</option>
                         <option value="ACTIVE">활성화</option>

@@ -149,7 +149,7 @@ export default function PricingSection() {
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 mb-20">
           {pricingPlans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -225,7 +225,7 @@ export default function PricingSection() {
               </motion.button>
 
               {/* Features */}
-              <div className="space-y-3 mb-6">
+              <div className="space-y-2.5 mb-6">
                 <div
                   className={`text-sm font-semibold mb-3 ${
                     plan.popular ? 'text-white' : 'text-gray-900'
@@ -234,15 +234,15 @@ export default function PricingSection() {
                   포함된 기능:
                 </div>
                 {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-2">
+                  <div key={feature} className="flex items-start gap-2.5">
                     <span
-                      className={`mt-0.5 ${plan.popular ? 'text-white' : 'text-primary-600'}`}
+                      className={`mt-0.5 shrink-0 ${plan.popular ? 'text-white' : 'text-primary-600'}`}
                     >
                       ✓
                     </span>
                     <span
-                      className={`text-sm ${
-                        plan.popular ? 'text-white' : 'text-gray-700'
+                      className={`text-sm leading-snug ${
+                        plan.popular ? 'text-white/95' : 'text-gray-700'
                       }`}
                     >
                       {feature}
@@ -253,12 +253,12 @@ export default function PricingSection() {
 
               {/* Limitations */}
               {plan.limitations.length > 0 && (
-                <div className="space-y-2 pt-6 border-t border-gray-200">
+                <div className="space-y-2.5 pt-6 border-t border-gray-200">
                   <div className="text-sm font-semibold mb-2 text-gray-600">제한 사항:</div>
                   {plan.limitations.map((limitation) => (
-                    <div key={limitation} className="flex items-start gap-2">
-                      <span className="text-gray-400 mt-0.5">✗</span>
-                      <span className="text-sm text-gray-500">{limitation}</span>
+                    <div key={limitation} className="flex items-start gap-2.5">
+                      <span className="text-gray-400 mt-0.5 shrink-0">✗</span>
+                      <span className="text-sm leading-snug text-gray-500">{limitation}</span>
                     </div>
                   ))}
                 </div>
@@ -365,7 +365,7 @@ export default function PricingSection() {
           <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
             모든 플랜에 포함된 기능
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
             {[
               { icon: '🔒', text: '안전한 데이터 암호화' },
               { icon: '☁️', text: '클라우드 자동 백업' },
@@ -384,7 +384,7 @@ export default function PricingSection() {
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 className="flex items-center gap-3 bg-white rounded-lg p-4 shadow-md"
               >
-                <span className="text-3xl">{item.icon}</span>
+                <span className="text-2xl sm:text-3xl shrink-0">{item.icon}</span>
                 <span className="text-sm font-medium text-gray-700">{item.text}</span>
               </motion.div>
             ))}

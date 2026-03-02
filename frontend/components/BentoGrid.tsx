@@ -277,13 +277,13 @@ export default function BentoGrid() {
                 {/* Content */}
                 <div className="relative z-10 h-full flex flex-col justify-between text-white">
                   <div>
-                    <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                    <div className="text-4xl sm:text-5xl mb-3 sm:mb-4 transform group-hover:scale-110 transition-transform duration-300">
                       {service.icon}
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold mb-2">
                       {service.title}
                     </h3>
-                    <p className="text-white/90 text-sm">
+                    <p className="text-white text-sm leading-relaxed drop-shadow-sm">
                       {service.description}
                     </p>
                   </div>

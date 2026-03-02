@@ -226,28 +226,28 @@ export default function SocialPulsePage() {
             ) : (
               <div className="space-y-2">
                 {filteredChannels.map(channel => (
-                  <div key={channel.id} className="flex items-center gap-2 group">
+                  <div key={channel.id} className="flex items-center gap-3 group py-1">
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0 ${
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center text-white text-sm font-bold shrink-0 ${
                         PLATFORM_COLORS[channel.platform] ?? 'bg-gray-500'
                       }`}
                     >
                       {PLATFORM_ICONS[channel.platform] ?? channel.platform[0]}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-gray-800 truncate">{channel.channelName}</p>
-                      <p className="text-xs text-gray-400">{channel.clientName}</p>
+                      <p className="text-sm font-medium text-gray-800 truncate">{channel.channelName}</p>
+                      <p className="text-xs text-gray-500">{channel.clientName}</p>
                     </div>
                     <button
                       onClick={() => handleToggleChannel(channel)}
-                      className={`w-8 h-4 rounded-full transition-colors shrink-0 ${
+                      className={`w-9 h-5 rounded-full transition-colors shrink-0 ${
                         channel.status === 'ACTIVE' ? 'bg-green-500' : 'bg-gray-300'
                       }`}
                       title={channel.status === 'ACTIVE' ? '활성 (클릭하여 비활성화)' : '비활성'}
                     >
                       <div
-                        className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mx-0.5 ${
-                          channel.status === 'ACTIVE' ? 'translate-x-3.5' : 'translate-x-0'
+                        className={`w-4 h-4 bg-white rounded-full shadow transition-transform mx-0.5 ${
+                          channel.status === 'ACTIVE' ? 'translate-x-4' : 'translate-x-0'
                         }`}
                       />
                     </button>
@@ -277,7 +277,7 @@ export default function SocialPulsePage() {
                 }`}
               >
                 <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-                <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+                <p className="text-xs font-medium text-gray-500 mt-1.5">{stat.label}</p>
               </button>
             ))}
           </div>
@@ -307,7 +307,7 @@ export default function SocialPulsePage() {
             ) : (
               <div className="divide-y">
                 {filteredPosts.map(post => (
-                  <div key={post.id} className="p-4 hover:bg-gray-50 transition-colors">
+                  <div key={post.id} className="px-5 py-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-start gap-3">
                       <div
                         className={`w-9 h-9 rounded-lg flex items-center justify-center text-white text-sm font-bold shrink-0 mt-0.5 ${
@@ -317,9 +317,9 @@ export default function SocialPulsePage() {
                         {PLATFORM_ICONS[post.platform] ?? post.platform[0]}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1.5">
                           <PostStatusBadge status={post.status} />
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-gray-500">
                             {post.publishedAt
                               ? timeAgo(post.publishedAt)
                               : post.scheduledAt
@@ -332,14 +332,14 @@ export default function SocialPulsePage() {
                               : timeAgo(post.createdAt)}
                           </span>
                           {post.externalPostId && (
-                            <span className="text-xs text-gray-300 font-mono truncate max-w-32">
+                            <span className="text-xs text-gray-400 font-mono truncate max-w-32">
                               {post.externalPostId}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-700 line-clamp-2">{post.content}</p>
+                        <p className="text-sm text-gray-700 leading-relaxed line-clamp-2">{post.content}</p>
                         {post.channel && (
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-gray-500 mt-1.5">
                             {post.channel.clientName} · {post.channel.channelName}
                           </p>
                         )}
