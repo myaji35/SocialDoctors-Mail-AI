@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// 인증이 필요한 경로
-const PROTECTED_PATHS = ['/partner/dashboard', '/admin'];
+// 인증이 필요한 경로 (NextAuth 세션 필수)
+// /admin은 자체 비밀번호 인증 사용하므로 제외
+const PROTECTED_PATHS = ['/partner/dashboard'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
