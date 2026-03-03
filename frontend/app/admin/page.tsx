@@ -19,6 +19,7 @@ interface SaasProduct {
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [products, setProducts] = useState<SaasProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +52,7 @@ export default function AdminPage() {
       const res = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email, password }),
       });
       if (res.ok) {
         setIsAuthenticated(true);
@@ -71,6 +72,7 @@ export default function AdminPage() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('adminAuth');
+    setEmail('');
     setPassword('');
   };
 
@@ -214,6 +216,20 @@ export default function AdminPage() {
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">
+                이메일
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
+                placeholder="관리자 이메일을 입력하세요"
+                required
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
                 비밀번호
               </label>
               <input
@@ -223,7 +239,6 @@ export default function AdminPage() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-base"
                 placeholder="관리자 비밀번호를 입력하세요"
                 required
-                autoFocus
               />
             </div>
 
