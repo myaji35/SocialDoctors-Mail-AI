@@ -225,6 +225,7 @@ model SnsChannel {
   updatedAt      DateTime      @updatedAt
 
   posts          SocialPost[]
+  cardNews       CardNews[]
 
   @@index([clientSlug])
   @@index([platform])
@@ -255,6 +256,85 @@ model SocialPost {
   @@index([channelId])
   @@index([callerApp])
   @@map("social_posts")
+}
+
+// ─── Card News ──────────────────────────────────────────────────
+
+enum CardTemplate {
+  SERVICE_INTRO
+  EDUCATION
+  EVENT
+  CUSTOM
+}
+
+enum CardNewsStatus {
+  DRAFT
+  RENDERED
+  PUBLISHED
+  FAILED
+}
+
+enum SlideRole {
+  HOOK
+  PROBLEM
+  SOLUTION
+  FEATURE
+  PROOF
+  CTA
+  INFO
+}
+
+model CardNews {
+  id            String          @id @default(cuid())
+  title         String
+  topic         String
+  templateType  CardTemplate    @default(SERVICE_INTRO)
+  slideCount    Int
+  status        CardNewsStatus  @default(DRAFT)
+
+  brandColor    String?
+  subColor      String?
+  logoUrl       String?
+  fontFamily    String?         @default("Noto Sans KR")
+
+  channelId     String?
+  channel       SnsChannel?     @relation(fields: [channelId], references: [id])
+  postId        String?
+
+  slides        CardSlide[]
+
+  createdBy     String?
+  callerApp     String?
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  publishedAt   DateTime?
+
+  @@index([status])
+  @@index([callerApp])
+  @@index([channelId])
+  @@map("card_news")
+}
+
+model CardSlide {
+  id            String    @id @default(cuid())
+  cardNewsId    String
+  cardNews      CardNews  @relation(fields: [cardNewsId], references: [id], onDelete: Cascade)
+
+  slideOrder    Int
+  role          SlideRole
+  headline      String
+  bodyText      String?   @db.Text
+  keyPoints     String[]
+  imageUrl      String?
+  bgColor       String?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([cardNewsId, slideOrder])
+  @@index([cardNewsId])
+  @@map("card_slides")
 }
 
 // ─── Usage Tracking ──────────────────────────────────────────────
