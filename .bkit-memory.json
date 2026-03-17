@@ -1,8 +1,10 @@
 {
   "feature": "card-news",
-  "phase": "completed",
+  "phase": "archived",
   "matchRate": 91,
   "iterationCount": 1,
   "startedAt": "2026-03-17T00:00:00Z",
-  "updatedAt": "2026-03-17T00:00:00Z"
+  "updatedAt": "2026-03-17T00:00:00Z",
+  "archivedAt": "2026-03-17T00:00:00Z",
+  "archivedTo": "docs/archive/2026-03/card-news/"
 }
