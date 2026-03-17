@@ -1,6 +1,7 @@
 export interface PublishPayload {
   content: string;
   imageUrl?: string;
+  imageUrls?: string[];  // 카드뉴스 멀티 이미지 지원
   videoUrl?: string;
   link?: string;
 }

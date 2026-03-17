@@ -85,6 +85,18 @@ export default function CardNewsListPage() {
     loadCardNews();
   }, [loadCardNews]);
 
+  const handleDuplicate = async (id: string) => {
+    try {
+      const res = await fetch(`/api/card-news/${id}/duplicate`, { method: 'POST' });
+      if (res.ok) {
+        showToast('복제되었습니다.');
+        loadCardNews();
+      }
+    } catch {
+      showToast('복제에 실패했습니다.', 'error');
+    }
+  };
+
   const handleDelete = async (id: string) => {
     if (!confirm('이 카드뉴스를 삭제하시겠습니까?')) return;
     try {
@@ -258,6 +270,12 @@ export default function CardNewsListPage() {
                       발행
                     </button>
                   )}
+                  <button
+                    className="px-3 py-1.5 text-xs font-semibold rounded border border-gray-200 text-gray-600 hover:bg-gray-50"
+                    onClick={() => handleDuplicate(item.id)}
+                  >
+                    복제
+                  </button>
                   <button
                     className="px-3 py-1.5 text-xs font-semibold rounded border border-red-200 text-red-500 hover:bg-red-50 ml-auto"
                     onClick={() => handleDelete(item.id)}

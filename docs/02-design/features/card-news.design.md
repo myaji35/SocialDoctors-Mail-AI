@@ -952,3 +952,34 @@ cd frontend
 npm install satori @resvg/resvg-js
 # sharp는 이미 설치됨
 ```
+
+---
+
+## 11. 구현 변경사항 (v1.1 - 2026-03-17)
+
+> 실제 구현 과정에서 설계와 다르게 진행된 항목 기록
+
+### 11.1 추가된 기능 (설계에 없었으나 구현됨)
+
+| 기능 | 위치 | 설명 |
+|------|------|------|
+| `GET /api/card-news/[id]/insights` | `app/api/card-news/[id]/insights/route.ts` | Facebook Insights API 연동, 도달/노출/좋아요/공유/댓글/참여율 조회 |
+| Insights UI | `app/admin/card-news/[id]/page.tsx` | 상세 페이지에 성과 대시보드 표시 |
+| `POST /api/card-news/[id]/duplicate` | `app/api/card-news/[id]/duplicate/route.ts` | 카드뉴스 복제 기능 |
+| `mockMode` 파라미터 | publish, render-and-publish | 발행 시 Mock 모드 지원 |
+| `@@map` 테이블명 매핑 | schema.prisma | `card_news`, `card_slides` |
+
+### 11.2 변경된 구현 방식
+
+| 항목 | 설계 | 실제 구현 | 사유 |
+|------|------|-----------|------|
+| 렌더링 엔진 | Satori + @resvg/resvg-js + Sharp | SVG 직접 생성 + Sharp | MVP 단계에서 의존성 최소화, Satori는 Phase 2에서 도입 예정 |
+| DRAFT 발행 시 | 자동 렌더링 후 발행 | 400 에러 (수동 렌더링 요구) | 명확한 워크플로우 단계 분리 |
+| UI 컴포넌트 | 7개 독립 파일 | 대부분 페이지 내 inline | MVP 속도 우선, 리팩토링은 Phase 2 |
+
+### 11.3 멀티 이미지 포스팅 (v1.1 구현)
+
+Facebook 멀티 이미지 포스팅 지원:
+- `PublishPayload.imageUrls` 필드 추가 (`lib/sns-publishers/types.ts`)
+- Facebook: 미게시 사진 업로드 → `attached_media` 일괄 게시 (`lib/sns-publishers/facebook.ts`)
+- publish / render-and-publish API에서 모든 슬라이드 이미지 URL 전달

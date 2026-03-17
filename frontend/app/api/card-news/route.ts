@@ -64,6 +64,8 @@ export async function POST(request: NextRequest) {
     logoUrl,
     clientSlug,
     slides: preDefinedSlides,
+    autoPublish,
+    publishTo,
   } = body as {
     topic: string;
     templateType?: TemplateType;
@@ -72,6 +74,8 @@ export async function POST(request: NextRequest) {
     logoUrl?: string;
     clientSlug?: string;
     slides?: { headline: string; bodyText?: string; keyPoints?: string[]; role?: string }[];
+    autoPublish?: boolean;
+    publishTo?: { channelId?: string; clientSlug?: string; platform?: string };
   };
 
   if (!topic?.trim()) {
@@ -130,6 +134,33 @@ export async function POST(request: NextRequest) {
     },
     include: { slides: { orderBy: { slideOrder: 'asc' } } },
   });
+
+  // autoPublish: 생성 → 렌더링 → 발행 자동 처리 (외부 프로젝트 전자동 워크플로우)
+  if (autoPublish) {
+    const baseUrl = request.nextUrl.origin;
+    const renderAndPublishBody: Record<string, unknown> = {};
+    if (publishTo?.channelId) renderAndPublishBody.channelId = publishTo.channelId;
+    if (publishTo?.clientSlug) renderAndPublishBody.clientSlug = publishTo.clientSlug;
+    if (publishTo?.platform) renderAndPublishBody.platform = publishTo.platform;
+    if (!publishTo && clientSlug) renderAndPublishBody.clientSlug = clientSlug;
+
+    try {
+      const rapRes = await fetch(`${baseUrl}/api/card-news/${cardNews.id}/render-and-publish`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(request.headers.get('X-Api-Key') ? { 'X-Api-Key': request.headers.get('X-Api-Key')! } : {}),
+          ...(request.headers.get('X-Caller-App') ? { 'X-Caller-App': request.headers.get('X-Caller-App')! } : {}),
+          ...(request.headers.get('cookie') ? { 'cookie': request.headers.get('cookie')! } : {}),
+        },
+        body: JSON.stringify(renderAndPublishBody),
+      });
+      const rapData = await rapRes.json();
+      return NextResponse.json({ ...rapData, cardNews }, { status: 201 });
+    } catch {
+      return NextResponse.json({ ...cardNews, autoPublishError: 'render-and-publish failed' }, { status: 201 });
+    }
+  }
 
   return NextResponse.json(cardNews, { status: 201 });
 }

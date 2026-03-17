@@ -130,6 +130,10 @@ export async function POST(
   }
 
   // ── Step 3: 발행 ──────────────────────────────────
+  // 모든 렌더링된 이미지 URL 수집 (멀티 이미지 포스팅)
+  const allImageUrls = rendered
+    .sort((a, b) => a.slideOrder - b.slideOrder)
+    .map(r => `${baseUrl}/card-news/${id}/${r.filename}`);
   const postContent = caption ?? `${cardNews.title}\n\n#카드뉴스 #SocialDoctors`;
 
   const post = await prisma.socialPost.create({
@@ -152,7 +156,7 @@ export async function POST(
     const result = await publishToChannel(
       channel.platform,
       { pageId: channel.pageId, accessToken },
-      { content: postContent, imageUrl: firstImageUrl || undefined },
+      { content: postContent, imageUrl: firstImageUrl || undefined, imageUrls: allImageUrls.length > 1 ? allImageUrls : undefined },
       isMockMode
     );
 

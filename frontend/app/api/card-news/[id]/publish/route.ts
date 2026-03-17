@@ -80,8 +80,12 @@ export async function POST(
     );
   }
 
-  // 발행 콘텐츠 준비
-  const firstImageUrl = cardNews.slides.find((s) => s.imageUrl)?.imageUrl ?? undefined;
+  // 발행 콘텐츠 준비 — 모든 슬라이드 이미지 수집 (멀티 이미지 포스팅)
+  const allImageUrls = cardNews.slides
+    .filter((s) => s.imageUrl)
+    .sort((a, b) => a.slideOrder - b.slideOrder)
+    .map((s) => s.imageUrl!);
+  const firstImageUrl = allImageUrls[0] ?? undefined;
   const postContent = caption ?? `${cardNews.title}\n\n${cardNews.slides.map(s => s.headline).join(' | ')}\n\n#카드뉴스 #SocialDoctors`;
 
   // 예약 발행
@@ -135,7 +139,7 @@ export async function POST(
     const result = await publishToChannel(
       channel.platform,
       { pageId: channel.pageId, accessToken },
-      { content: postContent, imageUrl: firstImageUrl },
+      { content: postContent, imageUrl: firstImageUrl, imageUrls: allImageUrls.length > 1 ? allImageUrls : undefined },
       isMockMode
     );
 

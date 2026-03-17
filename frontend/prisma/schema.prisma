@@ -251,6 +251,8 @@ model SocialPost {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
+  cardNews         CardNews[]
+
   @@index([userId])
   @@index([scheduledAt])
   @@index([channelId])
@@ -300,6 +302,7 @@ model CardNews {
   channelId     String?
   channel       SnsChannel?     @relation(fields: [channelId], references: [id])
   postId        String?
+  post          SocialPost?     @relation(fields: [postId], references: [id])
 
   slides        CardSlide[]
 
