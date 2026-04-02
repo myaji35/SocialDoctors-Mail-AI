@@ -97,7 +97,7 @@ export default function SaasGallerySection() {
                     className={`bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer ${
                       featured
                         ? 'border-2 border-purple-400 ring-2 ring-purple-200'
-                        : 'border border-gray-100'
+                        : 'border border-gray-200'
                     }`}
                     onClick={() => handleViewDetail(product)}
                   >
@@ -137,17 +137,17 @@ export default function SaasGallerySection() {
                       {/* Badges */}
                       <div className="flex items-center gap-2 mb-3">
                         <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
-                          featured ? 'bg-purple-100 text-purple-700' : 'bg-primary-100 text-primary-700'
+                          featured ? 'bg-purple-600 text-white' : 'bg-primary-100 text-primary-700'
                         }`}>
                           {product.category}
                         </span>
                         {featured && (
-                          <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full border border-yellow-300">
+                          <span className="inline-block px-2 py-1 bg-yellow-500 text-white text-xs font-bold rounded-full border border-yellow-300">
                             투자 모집 중
                           </span>
                         )}
                         {product.url.startsWith('http') && !featured && (
-                          <span className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                          <span className="inline-block px-2 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">
                             외부 서비스
                           </span>
                         )}

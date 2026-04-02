@@ -40,9 +40,9 @@ const navItems = [
 ];
 
 const STATUS_BADGE: Record<string, string> = {
-  ACTIVE: 'bg-green-100 text-green-700',
-  PENDING: 'bg-yellow-100 text-yellow-700',
-  SUSPENDED: 'bg-red-100 text-red-700',
+  ACTIVE: 'bg-green-600 text-white',
+  PENDING: 'bg-yellow-500 text-white',
+  SUSPENDED: 'bg-red-500 text-white',
 };
 const STATUS_LABEL: Record<string, string> = {
   ACTIVE: '활성',
@@ -87,7 +87,7 @@ export default function PartnerHubDashboard() {
           { label: '이번달 전환', value: `${stats?.monthlyConversions ?? 0}건`, change: '실시간' },
           { label: '총 커미션 지급', value: `₩${((stats?.totalCommissionPaid ?? 0) / 1000000).toFixed(1)}M`, change: '누적' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-emerald-600 font-semibold">{s.change}</p>
@@ -95,7 +95,7 @@ export default function PartnerHubDashboard() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-6">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-gray-900">파트너 현황</h2>
           <button className="text-xs px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">+ 파트너 초대</button>
@@ -105,7 +105,7 @@ export default function PartnerHubDashboard() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100">
+              <tr className="border-b border-gray-200">
                 {['파트너', '코드', '클릭', '가입', '수익', '상태'].map((h) => (
                   <th key={h} className="text-left py-2 px-3 text-xs text-gray-500 font-semibold">{h}</th>
                 ))}
@@ -132,7 +132,7 @@ export default function PartnerHubDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">커미션 구조</h2>
           <div className="space-y-3">
             {[
@@ -152,14 +152,14 @@ export default function PartnerHubDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">정산 대기</h2>
           {settlements.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-8">정산 대기 건이 없습니다.</p>
           ) : (
             <div className="space-y-3">
               {settlements.map((s) => (
-                <div key={s.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                <div key={s.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                   <div>
                     <p className="text-sm font-medium text-gray-800">{s.partnerName}</p>
                     <p className="text-xs text-gray-400">{s.bankName} · {new Date(s.createdAt).toLocaleDateString('ko-KR')}</p>

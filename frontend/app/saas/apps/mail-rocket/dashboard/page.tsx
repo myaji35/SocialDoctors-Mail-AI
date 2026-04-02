@@ -39,7 +39,7 @@ export default function MailRocketDashboard() {
           { label: '평균 클릭율', value: '12.4%', change: '+3.1%' },
           { label: '수신자 수', value: '8,342명', change: '+234 이번달' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-rose-600 font-semibold">{s.change}</p>
@@ -48,17 +48,17 @@ export default function MailRocketDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-gray-900">캠페인 목록</h2>
             <button className="text-xs px-3 py-1.5 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors">+ 새 캠페인</button>
           </div>
           <div className="space-y-3">
             {campaigns.map((c, i) => (
-              <div key={i} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
+              <div key={i} className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-sm text-gray-800">{c.name}</span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${c.status === '완료' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>{c.status}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${c.status === '완료' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500'}`}>{c.status}</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-xs text-gray-500">
                   <span>발송 {c.sent.toLocaleString()}명</span>
@@ -70,7 +70,7 @@ export default function MailRocketDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">빠른 이메일 작성</h2>
           <div className="space-y-3">
             <input

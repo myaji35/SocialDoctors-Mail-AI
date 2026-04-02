@@ -10,7 +10,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model SaasProduct {
@@ -18,14 +17,370 @@ model SaasProduct {
   name            String
   overview        String    @db.Text
   url             String
+  testUrl         String?
   partners        String[]
   thumbnail       String?   @db.Text
   category        String
   isActive        Boolean   @default(true)
+  launchDate      DateTime?
+  fundingTarget   Float?
+  fundingRaised   Float     @default(0)
+  fundingEquity   Float?
   planeIssueId    String?
   planeProjectId  String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
   @@map("saas_products")
+}
+
+// ─── Affiliate System ───────────────────────────────────────────
+
+enum PartnerStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum CommissionStatus {
+  PENDING
+  CONFIRMED
+  PAID
+}
+
+enum SettlementStatus {
+  REQUESTED
+  PROCESSING
+  COMPLETED
+  REJECTED
+}
+
+model Partner {
+  id           String        @id @default(cuid())
+  userId       String        @unique
+  referralCode String        @unique
+  name         String
+  email        String        @unique
+  phone        String?
+  bio          String?       @db.Text
+  status       PartnerStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  wallet        PartnerWallet?
+  referredUsers ReferredUser[]
+  clicks        ReferralClick[]
+
+  @@map("partners")
+}
+
+model PartnerWallet {
+  id             String   @id @default(cuid())
+  partnerId      String   @unique
+  partner        Partner  @relation(fields: [partnerId], references: [id])
+  currentBalance Float    @default(0)
+  totalEarned    Float    @default(0)
+  pendingAmount  Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  transactions CommissionTransaction[]
+  settlements  Settlement[]
+
+  @@map("partner_wallets")
+}
+
+model ReferredUser {
+  id        String   @id @default(cuid())
+  partnerId String
+  partner   Partner  @relation(fields: [partnerId], references: [id])
+  userId    String   @unique
+  email     String
+  createdAt DateTime @default(now())
+
+  transactions CommissionTransaction[]
+
+  @@map("referred_users")
+}
+
+model ReferralClick {
+  id          String    @id @default(cuid())
+  partnerId   String
+  partner     Partner   @relation(fields: [partnerId], references: [id])
+  ipAddress   String?
+  userAgent   String?
+  converted   Boolean   @default(false)
+  convertedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@map("referral_clicks")
+}
+
+model CommissionTransaction {
+  id               String           @id @default(cuid())
+  walletId         String
+  wallet           PartnerWallet    @relation(fields: [walletId], references: [id])
+  referredUserId   String
+  referredUser     ReferredUser     @relation(fields: [referredUserId], references: [id])
+  serviceId        String
+  serviceName      String
+  paymentAmount    Float
+  commissionRate   Float            @default(0.20)
+  commissionAmount Float
+  status           CommissionStatus @default(PENDING)
+  webhookPayload   Json?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@map("commission_transactions")
+}
+
+model Settlement {
+  id             String           @id @default(cuid())
+  walletId       String
+  wallet         PartnerWallet    @relation(fields: [walletId], references: [id])
+  amount         Float
+  bankName       String
+  accountNumber  String
+  accountHolder  String
+  status         SettlementStatus @default(REQUESTED)
+  memo           String?          @db.Text
+  processedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@map("settlements")
+}
+
+// ─── Content AI ──────────────────────────────────────────────────
+
+enum ContentType {
+  BLOG_POST
+  SNS_COPY
+  AD_COPY
+  EMAIL_NEWSLETTER
+  PRODUCT_DESCRIPTION
+  PRESS_RELEASE
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Content {
+  id          String        @id @default(cuid())
+  userId      String
+  type        ContentType
+  status      ContentStatus @default(DRAFT)
+  title       String?
+  keyword     String
+  body        String        @db.Text
+  promptUsed  String?       @db.Text
+  tokensUsed  Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("contents")
+}
+
+// ─── Social Pulse ────────────────────────────────────────────────
+
+enum SocialPlatform {
+  FACEBOOK
+  INSTAGRAM
+  X
+  YOUTUBE
+  THREADS
+  TIKTOK
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  FAILED
+}
+
+enum ChannelStatus {
+  ACTIVE
+  INACTIVE
+  TOKEN_EXPIRED
+}
+
+model SnsChannel {
+  id             String        @id @default(cuid())
+  clientName     String
+  clientSlug     String
+  platform       SocialPlatform
+  channelName    String
+  pageId         String
+  accessToken    String        @db.Text
+  tokenExpiresAt DateTime?
+  status         ChannelStatus @default(ACTIVE)
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  posts          SocialPost[]
+  cardNews       CardNews[]
+
+  @@index([clientSlug])
+  @@index([platform])
+  @@map("sns_channels")
+}
+
+model SocialPost {
+  id               String         @id @default(cuid())
+  userId           String
+  platform         SocialPlatform
+  status           PostStatus     @default(DRAFT)
+  content          String         @db.Text
+  imageUrl         String?
+  videoUrl         String?
+  scheduledAt      DateTime?
+  publishedAt      DateTime?
+  aiGenerated      Boolean        @default(false)
+  channelId        String?
+  channel          SnsChannel?    @relation(fields: [channelId], references: [id])
+  externalPostId   String?
+  publishedResult  Json?
+  callerApp        String?        // 호출한 외부 서비스 식별자 (예: "0025_ceo", "townin")
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  cardNews         CardNews[]
+
+  @@index([userId])
+  @@index([scheduledAt])
+  @@index([channelId])
+  @@index([callerApp])
+  @@map("social_posts")
+}
+
+// ─── Card News ──────────────────────────────────────────────────
+
+enum CardTemplate {
+  SERVICE_INTRO
+  EDUCATION
+  EVENT
+  CUSTOM
+}
+
+enum CardNewsStatus {
+  DRAFT
+  RENDERED
+  PUBLISHED
+  FAILED
+}
+
+enum SlideRole {
+  HOOK
+  PROBLEM
+  SOLUTION
+  FEATURE
+  PROOF
+  CTA
+  INFO
+}
+
+model CardNews {
+  id            String          @id @default(cuid())
+  title         String
+  topic         String
+  templateType  CardTemplate    @default(SERVICE_INTRO)
+  slideCount    Int
+  status        CardNewsStatus  @default(DRAFT)
+
+  brandColor    String?
+  subColor      String?
+  logoUrl       String?
+  fontFamily    String?         @default("Noto Sans KR")
+
+  channelId     String?
+  channel       SnsChannel?     @relation(fields: [channelId], references: [id])
+  postId        String?
+  post          SocialPost?     @relation(fields: [postId], references: [id])
+
+  slides        CardSlide[]
+
+  createdBy     String?
+  callerApp     String?
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  publishedAt   DateTime?
+
+  @@index([status])
+  @@index([callerApp])
+  @@index([channelId])
+  @@map("card_news")
+}
+
+model CardSlide {
+  id            String    @id @default(cuid())
+  cardNewsId    String
+  cardNews      CardNews  @relation(fields: [cardNewsId], references: [id], onDelete: Cascade)
+
+  slideOrder    Int
+  role          SlideRole
+  headline      String
+  bodyText      String?   @db.Text
+  keyPoints     String[]
+  imageUrl      String?
+  bgColor       String?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([cardNewsId, slideOrder])
+  @@index([cardNewsId])
+  @@map("card_slides")
+}
+
+// ─── Feedback ────────────────────────────────────────────────────
+
+model Feedback {
+  id        String   @id @default(cuid())
+  productId String
+  author    String
+  content   String   @db.Text
+  rating    Int
+  authorKey String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  replies   FeedbackReply[]
+
+  @@index([productId])
+  @@map("feedbacks")
+}
+
+model FeedbackReply {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  author     String
+  content    String   @db.Text
+  isAdmin    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([feedbackId])
+  @@map("feedback_replies")
+}
+
+// ─── Usage Tracking ──────────────────────────────────────────────
+
+model UsageRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  appSlug   String
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, appSlug])
+  @@map("usage_records")
 }

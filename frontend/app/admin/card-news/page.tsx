@@ -254,7 +254,7 @@ export default function CardNewsListPage() {
                 </div>
 
                 {/* 액션 버튼 */}
-                <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
+                <div className="flex gap-2 mt-3 pt-3 border-t border-gray-200">
                   <Link
                     href={`/admin/card-news/${item.id}`}
                     className="px-3 py-1.5 text-xs font-semibold rounded border border-gray-200 text-gray-600 hover:bg-gray-50"

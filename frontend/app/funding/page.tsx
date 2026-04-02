@@ -112,9 +112,9 @@ export default function FundingPage() {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 mb-6">
-            <span className="bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold">CertiGraph</span>
+            <span className="bg-blue-500 text-white px-4 py-1.5 rounded-full text-sm font-bold">CertiGraph</span>
             <span className="text-gray-400">×</span>
-            <span className="bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full text-sm font-bold">SocialDoctors</span>
+            <span className="bg-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold">SocialDoctors</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             AI가 합격을 처방합니다
@@ -188,7 +188,7 @@ export default function FundingPage() {
           ].map((item, i) => (
             <div
               key={i}
-              className={`bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center`}
+              className={`bg-white rounded-2xl border border-gray-200 shadow-sm p-6 text-center`}
             >
               <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl mb-4 ${
                 item.color === 'blue' ? 'bg-blue-50 text-blue-600' :
@@ -212,7 +212,7 @@ export default function FundingPage() {
         >
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
-              <span className="inline-block bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+              <span className="inline-block bg-blue-500 text-white px-4 py-1.5 rounded-full text-sm font-bold mb-4">
                 얼리어답터 혜택
               </span>
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
@@ -337,7 +337,7 @@ export default function FundingPage() {
                     onChange={(e) => setSurveyData((d) => ({ ...d, email: e.target.value }))}
                     placeholder="example@email.com"
                     required
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-400 focus:outline-none text-sm"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-purple-400 focus:outline-none text-sm"
                   />
                 </div>
 

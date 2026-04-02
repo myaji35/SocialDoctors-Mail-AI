@@ -55,7 +55,7 @@ const plans = [
 export default function CrmProPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -133,7 +133,7 @@ export default function CrmProPage() {
               </div>
             </div>
 
-            <div className="mt-3 bg-white rounded-xl border border-gray-100 p-3">
+            <div className="mt-3 bg-white rounded-xl border border-gray-200 p-3">
               <p className="text-xs text-gray-500 mb-2">이번달 자동화 성과</p>
               <div className="grid grid-cols-3 gap-2">
                 <div className="text-center">

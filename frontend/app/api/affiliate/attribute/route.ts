@@ -12,8 +12,9 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const body = await request.json();
-    const { referralCode } = body;
+    const body = await request.json().catch(() => ({}));
+    // referralCode는 body에서 직접 전달하거나, httpOnly ref 쿠키에서 읽음
+    const referralCode = body.referralCode || request.cookies.get('ref')?.value;
 
     if (!referralCode) {
       return NextResponse.json({ success: false, attributed: false });
@@ -50,7 +51,10 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    return NextResponse.json({ success: true, attributed: true });
+    // 귀속 완료 후 ref 쿠키 삭제 (중복 방지)
+    const response = NextResponse.json({ success: true, attributed: true });
+    response.cookies.set('ref', '', { maxAge: 0, path: '/' });
+    return response;
   } catch (error) {
     console.error('[affiliate/attribute]', error);
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });

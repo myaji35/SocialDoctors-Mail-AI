@@ -54,7 +54,7 @@ const plans = [
 export default function InsightBoardPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -109,11 +109,11 @@ export default function InsightBoardPage() {
               <div className="w-3 h-3 rounded-full bg-green-400"></div>
               <span className="ml-4 text-sm font-semibold text-gray-700">Insight Board</span>
             </div>
-            <span className="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-semibold">⚡ 실시간</span>
+            <span className="text-xs bg-orange-500 text-white px-3 py-1 rounded-full font-semibold">⚡ 실시간</span>
           </div>
           <div className="grid grid-cols-4 gap-3 mb-4">
             {kpis.map((kpi) => (
-              <div key={kpi.label} className="bg-white rounded-xl p-4 border border-gray-100">
+              <div key={kpi.label} className="bg-white rounded-xl p-4 border border-gray-200">
                 <p className="text-xs text-gray-500 mb-1">{kpi.label}</p>
                 <p className="text-xl font-bold text-gray-900">{kpi.value}</p>
                 <p className={`text-xs mt-1 font-semibold ${kpi.up ? 'text-green-600' : 'text-red-500'}`}>{kpi.change}</p>
@@ -121,7 +121,7 @@ export default function InsightBoardPage() {
             ))}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl p-4 border border-gray-100">
+            <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500 mb-3">매출 트렌드 (30일)</p>
               <div className="flex items-end gap-1 h-16">
                 {[40, 55, 45, 70, 60, 80, 75, 90, 85, 95, 88, 100].map((h, i) => (
@@ -129,7 +129,7 @@ export default function InsightBoardPage() {
                 ))}
               </div>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-gray-100">
+            <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500 mb-3">채널별 유입</p>
               <div className="space-y-2">
                 {[['검색', 45, 'bg-orange-500'], ['소셜', 32, 'bg-orange-300'], ['직접', 23, 'bg-orange-100']].map(([label, pct, color]) => (

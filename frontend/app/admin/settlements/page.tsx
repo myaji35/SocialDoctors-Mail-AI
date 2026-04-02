@@ -19,10 +19,10 @@ interface Settlement {
 }
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
-  REQUESTED:  { label: '신청', className: 'bg-yellow-100 text-yellow-800' },
-  PROCESSING: { label: '처리중', className: 'bg-blue-100 text-blue-800' },
-  COMPLETED:  { label: '완료', className: 'bg-green-100 text-green-800' },
-  REJECTED:   { label: '거절', className: 'bg-red-100 text-red-800' },
+  REQUESTED:  { label: '신청', className: 'bg-yellow-500 text-white' },
+  PROCESSING: { label: '처리중', className: 'bg-blue-500 text-white' },
+  COMPLETED:  { label: '완료', className: 'bg-green-600 text-white' },
+  REJECTED:   { label: '거절', className: 'bg-red-500 text-white' },
 };
 
 export default function AdminSettlementsPage() {
@@ -34,18 +34,17 @@ export default function AdminSettlementsPage() {
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
-    const auth = sessionStorage.getItem('adminAuth');
-    if (auth === 'true') setIsAuth(true);
-    else window.location.href = '/admin';
+    fetch('/api/admin/auth/check').then(res => {
+      if (res.ok) setIsAuth(true);
+      else window.location.href = '/admin';
+    }).catch(() => { window.location.href = '/admin'; });
   }, []);
 
   const fetchSettlements = useCallback(async () => {
     if (!isAuth) return;
     setIsLoading(true);
     const url = filter ? `/api/admin/settlements?status=${filter}` : '/api/admin/settlements';
-    const res = await fetch(url, {
-      headers: { 'x-admin-token': sessionStorage.getItem('adminPassword') || '' },
-    });
+    const res = await fetch(url);
     const data = await res.json();
     if (data.success) {
       setSettlements(data.data);
@@ -60,10 +59,7 @@ export default function AdminSettlementsPage() {
     setProcessingId(settlementId);
     await fetch('/api/admin/settlements', {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-token': sessionStorage.getItem('adminPassword') || '',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ settlementId, status, memo }),
     });
     setProcessingId(null);

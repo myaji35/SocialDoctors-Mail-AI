@@ -65,7 +65,7 @@ export default function PartnerRegisterPage() {
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
               placeholder="홍길동"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none transition-colors"
             />
           </div>
 
@@ -78,7 +78,7 @@ export default function PartnerRegisterPage() {
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               placeholder="010-0000-0000"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none transition-colors"
             />
           </div>
 
@@ -91,7 +91,7 @@ export default function PartnerRegisterPage() {
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
               placeholder="어떤 방식으로 홍보할 계획인지 알려주세요..."
               rows={4}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm resize-vertical focus:border-[#00A1E0] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-sm resize-vertical focus:border-[#00A1E0] focus:outline-none transition-colors"
             />
           </div>
 

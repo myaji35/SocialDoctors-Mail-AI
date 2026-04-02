@@ -60,7 +60,7 @@ export default function ContentAIPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Nav */}
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -128,7 +128,7 @@ export default function ContentAIPage() {
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
               placeholder="주제를 입력하세요 (예: 유기농 농산물 직거래)"
-              className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-sm focus:border-purple-400 outline-none mb-3"
+              className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl text-sm focus:border-purple-400 outline-none mb-3"
             />
             <button className="w-full py-3 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-colors flex items-center justify-center gap-2">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
@@ -143,7 +143,7 @@ export default function ContentAIPage() {
               <p className="text-xs text-gray-600 leading-relaxed">우리 농장에서 직접 재배한 유기농 농산물을 당신의 식탁에 전달합니다. 농약 없이, 정직하게 키운 채소와 과일로 가족의 건강을 지키세요...</p>
               <div className="flex gap-2 mt-3">
                 <button className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg">복사</button>
-                <button className="px-3 py-1.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded-lg">SNS로 보내기</button>
+                <button className="px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-lg">SNS로 보내기</button>
               </div>
             </div>
           </motion.div>

@@ -141,7 +141,7 @@ export default function PricingSection() {
               }`}
             >
               연간 결제
-              <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+              <span className="ml-2 text-xs bg-green-600 text-white px-2 py-1 rounded-full">
                 20% 할인
               </span>
             </button>

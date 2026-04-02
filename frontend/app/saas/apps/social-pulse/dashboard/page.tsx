@@ -117,7 +117,7 @@ export default function SocialPulseDashboard() {
           { label: '예약됨', value: String(posts.filter(p => p.status === 'SCHEDULED').length), change: '대기중' },
           { label: 'AI 카피 생성', value: '실시간', change: 'Gemini AI' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 font-semibold text-blue-600">{s.change}</p>
@@ -127,7 +127,7 @@ export default function SocialPulseDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* 예약 게시물 */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-gray-900">게시물 관리</h2>
             <button
@@ -180,9 +180,9 @@ export default function SocialPulseDashboard() {
               posts.map((post) => (
                 <div key={post.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                   <span className={`text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0 ${
-                    post.platform === 'FACEBOOK' ? 'bg-blue-100 text-blue-700' :
+                    post.platform === 'FACEBOOK' ? 'bg-blue-500 text-white' :
                     post.platform === 'INSTAGRAM' ? 'bg-pink-100 text-pink-700' :
-                    post.platform === 'YOUTUBE' ? 'bg-red-100 text-red-700' :
+                    post.platform === 'YOUTUBE' ? 'bg-red-500 text-white' :
                     'bg-gray-200 text-gray-700'
                   }`}>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>
                   <div className="flex-1 min-w-0">
@@ -192,8 +192,8 @@ export default function SocialPulseDashboard() {
                     )}
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                    post.status === 'SCHEDULED' ? 'bg-yellow-100 text-yellow-700' :
-                    post.status === 'PUBLISHED' ? 'bg-green-100 text-green-700' :
+                    post.status === 'SCHEDULED' ? 'bg-yellow-500 text-white' :
+                    post.status === 'PUBLISHED' ? 'bg-green-600 text-white' :
                     'bg-gray-100 text-gray-500'
                   }`}>{STATUS_LABEL[post.status] ?? post.status}</span>
                 </div>
@@ -203,7 +203,7 @@ export default function SocialPulseDashboard() {
         </div>
 
         {/* AI 카피 생성 */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">AI 카피 생성 <span className="text-xs text-blue-500 font-normal">Gemini AI 탑재</span></h2>
           <div className="space-y-3">
             <input
@@ -235,7 +235,7 @@ export default function SocialPulseDashboard() {
         </div>
 
         {/* 채널 연동 */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">채널 연동</h2>
           <div className="space-y-2">
             {[
@@ -244,7 +244,7 @@ export default function SocialPulseDashboard() {
               { name: 'X (Twitter)', connected: false },
               { name: 'YouTube', connected: false },
             ].map((ch) => (
-              <div key={ch.name} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+              <div key={ch.name} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
                 <span className="text-sm font-medium text-gray-700">{ch.name}</span>
                 <button className="text-xs px-3 py-1 bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-blue-600 border border-gray-200 rounded-lg transition-colors">
                   연동하기
@@ -256,7 +256,7 @@ export default function SocialPulseDashboard() {
         </div>
 
         {/* 통합 인박스 */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">통합 인박스 <span className="text-xs text-gray-400">최근 댓글/DM</span></h2>
           <div className="space-y-3">
             {[

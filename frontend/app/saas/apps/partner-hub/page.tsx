@@ -70,7 +70,7 @@ export default function PartnerHubPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Nav */}
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -141,14 +141,14 @@ export default function PartnerHubPage() {
             <span className="ml-4 text-sm font-semibold text-gray-700">Partner Hub 대시보드</span>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white rounded-xl p-4 border border-gray-100 col-span-1">
+            <div className="bg-white rounded-xl p-4 border border-gray-200 col-span-1">
               <p className="text-xs text-gray-500 mb-3">내 레퍼럴 링크</p>
               <code className="text-sm font-mono bg-emerald-50 text-emerald-700 px-3 py-2 rounded-lg block mb-3">SD-A1B2C3</code>
               <div className="flex gap-2">
                 <button className="flex-1 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg">복사</button>
                 <button className="flex-1 py-1.5 bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg">QR코드</button>
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-gray-500">출금 가능 잔액</p>
                 <p className="text-2xl font-bold text-emerald-600 mt-1">₩1,200,000</p>
                 <button className="mt-2 w-full py-1.5 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-lg">출금 신청</button>
@@ -161,13 +161,13 @@ export default function PartnerHubPage() {
                   { label: '전환', value: '12' },
                   { label: '오늘 수익', value: '₩86,400' },
                 ].map((item) => (
-                  <div key={item.label} className="bg-white rounded-xl p-4 border border-gray-100">
+                  <div key={item.label} className="bg-white rounded-xl p-4 border border-gray-200">
                     <p className="text-xs text-gray-500">{item.label}</p>
                     <p className="text-xl font-bold text-gray-900 mt-1">{item.value}</p>
                   </div>
                 ))}
               </div>
-              <div className="bg-white rounded-xl p-4 border border-gray-100">
+              <div className="bg-white rounded-xl p-4 border border-gray-200">
                 <p className="text-xs text-gray-500 mb-3">최근 추천 고객</p>
                 {['kim***@naver.com  ₩58,000  방금 전', 'lee***@gmail.com  ₩29,000  1시간 전', 'park***@daum.net  ₩79,000  오늘'].map((r) => (
                   <div key={r} className="text-xs text-gray-700 py-1.5 border-b border-gray-50 last:border-0 font-mono">{r}</div>

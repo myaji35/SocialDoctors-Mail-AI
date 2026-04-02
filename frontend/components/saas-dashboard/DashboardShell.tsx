@@ -32,7 +32,7 @@ export default function DashboardShell({
             </svg>
             SocialDoctors
           </Link>
-          <span className="text-white/40">/</span>
+          <span className="text-white/60">/</span>
           <span className="font-bold text-white">{appName}</span>
           <span className={`text-xs px-2 py-0.5 bg-${themeColor}-500 rounded-full font-semibold`}>무료 체험</span>
         </div>

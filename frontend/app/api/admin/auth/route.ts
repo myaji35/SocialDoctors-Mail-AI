@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const ADMIN_EMAIL = 'admin@gmail.com';
+import { createAdminToken, setAdminCookie, clearAdminCookie, isAdminEmail } from '@/lib/admin-auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,12 +10,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
     }
 
-    if (email !== ADMIN_EMAIL || password !== adminPassword) {
+    if (!isAdminEmail(email) || password !== adminPassword) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    return NextResponse.json({ ok: true });
+    const token = await createAdminToken(email);
+    const response = NextResponse.json({ ok: true });
+    setAdminCookie(response, token);
+    return response;
   } catch {
     return NextResponse.json({ error: 'Bad request' }, { status: 400 });
   }
+}
+
+export async function DELETE() {
+  const response = NextResponse.json({ ok: true });
+  clearAdminCookie(response);
+  return response;
 }

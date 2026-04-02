@@ -15,9 +15,9 @@ interface Partner {
 }
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
-  PENDING:   { label: '심사중', className: 'bg-yellow-100 text-yellow-800' },
-  ACTIVE:    { label: '활성', className: 'bg-green-100 text-green-800' },
-  SUSPENDED: { label: '정지', className: 'bg-red-100 text-red-800' },
+  PENDING:   { label: '심사중', className: 'bg-yellow-500 text-white' },
+  ACTIVE:    { label: '활성', className: 'bg-green-600 text-white' },
+  SUSPENDED: { label: '정지', className: 'bg-red-500 text-white' },
 };
 
 export default function AdminPartnersPage() {
@@ -28,18 +28,17 @@ export default function AdminPartnersPage() {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    const auth = sessionStorage.getItem('adminAuth');
-    if (auth === 'true') setIsAuth(true);
-    else window.location.href = '/admin';
+    fetch('/api/admin/auth/check').then(res => {
+      if (res.ok) setIsAuth(true);
+      else window.location.href = '/admin';
+    }).catch(() => { window.location.href = '/admin'; });
   }, []);
 
   const fetchPartners = useCallback(async () => {
     if (!isAuth) return;
     setIsLoading(true);
     const url = filter ? `/api/admin/partners?status=${filter}` : '/api/admin/partners';
-    const res = await fetch(url, {
-      headers: { 'x-admin-token': sessionStorage.getItem('adminPassword') || '' },
-    });
+    const res = await fetch(url);
     const data = await res.json();
     if (data.success) {
       setPartners(data.data);
@@ -53,10 +52,7 @@ export default function AdminPartnersPage() {
   const handleStatusChange = async (partnerId: string, status: string) => {
     await fetch('/api/admin/partners', {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-token': sessionStorage.getItem('adminPassword') || '',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ partnerId, status }),
     });
     fetchPartners();
@@ -115,7 +111,7 @@ export default function AdminPartnersPage() {
               <thead className="bg-gray-50">
                 <tr>
                   {['이름/이메일', '레퍼럴 코드', '클릭/가입', '총 수익', '잔액', '상태', '관리'].map((h) => (
-                    <th key={h} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="px-6 py-3.5 text-left text-xs font-semibold text-gray-600">{h}</th>
                   ))}
                 </tr>
               </thead>

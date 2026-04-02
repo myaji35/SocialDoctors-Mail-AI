@@ -340,6 +340,37 @@ model CardSlide {
   @@map("card_slides")
 }
 
+// ─── Feedback ────────────────────────────────────────────────────
+
+model Feedback {
+  id        String   @id @default(cuid())
+  productId String
+  author    String
+  content   String   @db.Text
+  rating    Int
+  authorKey String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  replies   FeedbackReply[]
+
+  @@index([productId])
+  @@map("feedbacks")
+}
+
+model FeedbackReply {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  author     String
+  content    String   @db.Text
+  isAdmin    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([feedbackId])
+  @@map("feedback_replies")
+}
+
 // ─── Usage Tracking ──────────────────────────────────────────────
 
 model UsageRecord {

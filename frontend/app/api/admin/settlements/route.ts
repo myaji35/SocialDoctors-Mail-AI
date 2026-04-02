@@ -1,15 +1,11 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-
-function isAdminAuthorized(request: NextRequest): boolean {
-  const token = request.headers.get('x-admin-token');
-  return token === process.env.ADMIN_PASSWORD;
-}
+import { verifyAdminToken } from '@/lib/admin-auth';
 
 // GET /api/admin/settlements — 정산 요청 목록
 export async function GET(request: NextRequest) {
-  if (!isAdminAuthorized(request)) {
+  if (!(await verifyAdminToken(request))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -47,7 +43,7 @@ export async function GET(request: NextRequest) {
 
 // PATCH /api/admin/settlements — 정산 상태 처리
 export async function PATCH(request: NextRequest) {
-  if (!isAdminAuthorized(request)) {
+  if (!verifyAdminToken(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

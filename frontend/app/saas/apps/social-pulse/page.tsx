@@ -87,7 +87,7 @@ export default function SocialPulsePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Nav */}
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -154,7 +154,7 @@ export default function SocialPulsePage() {
               { label: '평균 참여율', value: '4.2%', change: '+0.8%', up: true },
               { label: 'AI 카피 생성', value: '89회', change: '이번달', up: null },
             ].map((stat) => (
-              <div key={stat.label} className="bg-white rounded-xl p-4 border border-gray-100">
+              <div key={stat.label} className="bg-white rounded-xl p-4 border border-gray-200">
                 <p className="text-xs text-gray-500 mb-1">{stat.label}</p>
                 <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
                 <p className={`text-xs mt-1 font-semibold ${stat.up === true ? 'text-green-600' : 'text-gray-500'}`}>{stat.change}</p>

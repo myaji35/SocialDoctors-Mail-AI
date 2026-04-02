@@ -55,7 +55,7 @@ const plans = [
 export default function TaskFlowPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -116,7 +116,7 @@ export default function TaskFlowPage() {
                   <p className="text-xs font-bold text-gray-700 mb-2">{col.title}</p>
                   <div className="space-y-2">
                     {col.items.map((item) => (
-                      <div key={item} className="bg-white rounded-lg p-2 shadow-sm border border-gray-100">
+                      <div key={item} className="bg-white rounded-lg p-2 shadow-sm border border-gray-200">
                         <p className="text-xs text-gray-700">{item}</p>
                       </div>
                     ))}
@@ -134,7 +134,7 @@ export default function TaskFlowPage() {
                 { label: '이번주 완료', value: '8개' },
                 { label: '기한 임박', value: '3개' },
               ].map((s) => (
-                <div key={s.label} className="bg-white rounded-xl p-3 border border-gray-100 text-center">
+                <div key={s.label} className="bg-white rounded-xl p-3 border border-gray-200 text-center">
                   <p className="text-xs text-gray-500">{s.label}</p>
                   <p className="text-lg font-bold text-sky-600 mt-0.5">{s.value}</p>
                 </div>

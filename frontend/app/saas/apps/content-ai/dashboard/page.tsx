@@ -78,7 +78,7 @@ export default function ContentAIDashboard() {
           { label: '평균 생성 속도', value: '2분', change: '목표 달성' },
           { label: '남은 크레딧', value: '308회', change: '무료 체험' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-purple-600 font-semibold">{s.change}</p>
@@ -87,14 +87,14 @@ export default function ContentAIDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">콘텐츠 템플릿 선택</h2>
           <div className="grid grid-cols-2 gap-2 mb-4">
             {templates.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setSelected(t.id)}
-                className={`p-3 rounded-lg border-2 text-left transition-all ${selected === t.id ? 'border-purple-500 bg-purple-50' : 'border-gray-100 hover:border-purple-200'}`}
+                className={`p-3 rounded-lg border-2 text-left transition-all ${selected === t.id ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-200'}`}
 
               >
                 <div className="text-xl mb-1">{t.icon}</div>
@@ -118,7 +118,7 @@ export default function ContentAIDashboard() {
           </button>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">생성 결과</h2>
           {result ? (
             <div className="space-y-3">

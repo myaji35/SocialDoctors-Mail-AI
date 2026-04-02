@@ -36,14 +36,15 @@ export default function AdminPage() {
   const [imagePreview, setImagePreview] = useState<string>('');
 
   useEffect(() => {
-    // 세션 스토리지에서 인증 상태 확인
-    const authStatus = sessionStorage.getItem('adminAuth');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-      fetchProducts();
-    } else {
-      setIsLoading(false);
-    }
+    // 쿠키 기반 인증 확인 (API 호출로 JWT 검증)
+    fetch('/api/admin/auth/check').then(res => {
+      if (res.ok) {
+        setIsAuthenticated(true);
+        fetchProducts();
+      } else {
+        setIsLoading(false);
+      }
+    }).catch(() => setIsLoading(false));
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -56,8 +57,6 @@ export default function AdminPage() {
       });
       if (res.ok) {
         setIsAuthenticated(true);
-        sessionStorage.setItem('adminAuth', 'true');
-        sessionStorage.setItem('adminPassword', password); // admin API 토큰 전송용
         fetchProducts();
       } else {
         alert('비밀번호가 올바르지 않습니다.');
@@ -69,9 +68,9 @@ export default function AdminPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await fetch('/api/admin/auth', { method: 'DELETE' });
     setIsAuthenticated(false);
-    sessionStorage.removeItem('adminAuth');
     setEmail('');
     setPassword('');
   };

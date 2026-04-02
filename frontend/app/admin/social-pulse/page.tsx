@@ -181,7 +181,7 @@ export default function SocialPulsePage() {
         <div className="w-64 shrink-0 space-y-4">
           {/* 클라이언트 필터 */}
           <div className="bg-white rounded-xl border p-4">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-gray-600 mb-3">
               클라이언트
             </h3>
             <button
@@ -212,7 +212,7 @@ export default function SocialPulsePage() {
           {/* 채널 카드들 */}
           <div className="bg-white rounded-xl border p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <h3 className="text-xs font-semibold text-gray-600">
                 채널 ({filteredChannels.length})
               </h3>
               <button

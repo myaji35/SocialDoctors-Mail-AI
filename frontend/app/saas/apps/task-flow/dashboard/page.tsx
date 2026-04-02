@@ -46,7 +46,7 @@ export default function TaskFlowDashboard() {
           { label: '이번주 완료', value: '23개', change: '+8개 전주 대비' },
           { label: '팀 멤버', value: '6명', change: '모두 활성' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-sky-600 font-semibold">{s.change}</p>
@@ -64,10 +64,10 @@ export default function TaskFlowDashboard() {
             </div>
             <div className="space-y-2">
               {tasks.map((task) => (
-                <div key={task.id} className="bg-white rounded-lg p-3 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-shadow">
+                <div key={task.id} className="bg-white rounded-lg p-3 shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow">
                   <p className="text-sm font-medium text-gray-800 mb-2">{task.title}</p>
                   <div className="flex items-center justify-between">
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${task.priority === '높음' ? 'bg-red-100 text-red-700' : task.priority === '보통' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-500'}`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${task.priority === '높음' ? 'bg-red-500 text-white' : task.priority === '보통' ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
                       {task.priority}
                     </span>
                     <div className="w-6 h-6 bg-sky-100 rounded-full flex items-center justify-center text-xs font-bold text-sky-700">
@@ -84,7 +84,7 @@ export default function TaskFlowDashboard() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
         <h2 className="font-bold text-gray-900 mb-4">빠른 태스크 추가</h2>
         <div className="flex gap-3">
           <input
@@ -94,7 +94,7 @@ export default function TaskFlowDashboard() {
             className="flex-1 px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-sky-400"
             onKeyDown={(e) => e.key === 'Enter' && setNewTask('')}
           />
-          <select className="px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-sky-400 text-gray-600">
+          <select className="px-3 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:border-sky-400 text-gray-600">
             <option>할 일</option>
             <option>진행중</option>
           </select>

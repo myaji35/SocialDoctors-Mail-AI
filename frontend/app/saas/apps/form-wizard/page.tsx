@@ -57,7 +57,7 @@ const plans = [
 export default function FormWizardPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -112,7 +112,7 @@ export default function FormWizardPage() {
             <span className="ml-4 text-sm font-semibold text-gray-700">Form Wizard 빌더</span>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-1 bg-white rounded-xl p-4 border border-gray-100">
+            <div className="col-span-1 bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs font-semibold text-gray-700 mb-3">폼 목록</p>
               {['채용 지원서 (124건)', '만족도 조사 (89건)', '이벤트 신청 (247건)'].map((f) => (
                 <div key={f} className="py-2 text-xs text-gray-600 border-b border-gray-50 last:border-0">{f}</div>
@@ -121,7 +121,7 @@ export default function FormWizardPage() {
                 + AI로 폼 생성
               </button>
             </div>
-            <div className="col-span-2 bg-white rounded-xl p-4 border border-gray-100">
+            <div className="col-span-2 bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs font-semibold text-gray-700 mb-3">채용 지원서 — 응답 분석</p>
               <div className="grid grid-cols-3 gap-2 mb-3">
                 {[

@@ -41,7 +41,7 @@ export default function CRMProDashboard() {
           { label: '이번달 매출', value: '₩34.2M', change: '+15%' },
           { label: '평균 LTV', value: '₩1.8M', change: '+₩200K' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-cyan-600 font-semibold">{s.change}</p>
@@ -49,7 +49,7 @@ export default function CRMProDashboard() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 mb-6">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-bold text-gray-900">고객 목록</h2>
           <input
@@ -61,7 +61,7 @@ export default function CRMProDashboard() {
         </div>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-gray-200">
               {['이름', '이메일', '등급', '최근 주문', '누적 구매액'].map(h => (
                 <th key={h} className="text-left py-2 px-3 text-xs text-gray-500 font-semibold">{h}</th>
               ))}
@@ -74,10 +74,10 @@ export default function CRMProDashboard() {
                 <td className="py-3 px-3 text-gray-500">{c.email}</td>
                 <td className="py-3 px-3">
                   <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
-                    c.status === 'VIP' ? 'bg-yellow-100 text-yellow-700' :
-                    c.status === '신규' ? 'bg-green-100 text-green-700' :
+                    c.status === 'VIP' ? 'bg-yellow-500 text-white' :
+                    c.status === '신규' ? 'bg-green-600 text-white' :
                     c.status === '휴면' ? 'bg-gray-100 text-gray-500' :
-                    'bg-blue-100 text-blue-700'
+                    'bg-blue-500 text-white'
                   }`}>{c.status}</span>
                 </td>
                 <td className="py-3 px-3 text-gray-500">{c.lastOrder}</td>
@@ -89,7 +89,7 @@ export default function CRMProDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">자동화 캠페인</h2>
           <div className="space-y-3">
             {[
@@ -102,14 +102,14 @@ export default function CRMProDashboard() {
                   <p className="text-sm font-medium text-gray-800">{c.name}</p>
                   <p className="text-xs text-gray-500">{c.trigger}</p>
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${c.status === '활성' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${c.status === '활성' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-500'}`}>
                   {c.status}
                 </span>
               </div>
             ))}
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">고객 세그먼트</h2>
           <div className="space-y-3">
             {[

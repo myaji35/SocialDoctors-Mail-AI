@@ -48,7 +48,7 @@ function FormRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 py-5 border-b border-gray-100 last:border-0">
+    <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 py-5 border-b border-gray-200 last:border-0">
       <div className="sm:w-52 shrink-0 pt-0.5">
         <p className="text-sm font-semibold text-gray-800">{label}</p>
         {hint && <p className="mt-0.5 text-xs text-gray-400 leading-relaxed">{hint}</p>}
@@ -396,7 +396,7 @@ export default function MarketplaceAdminPage() {
               {dDay && (
                 <span className={`px-3 py-1.5 rounded-full text-sm font-bold ${
                   dDay === 'D-Day'
-                    ? 'bg-green-100 text-green-700'
+                    ? 'bg-green-600 text-white'
                     : dDay.startsWith('D-')
                     ? 'bg-blue-50 text-blue-700'
                     : 'bg-gray-100 text-gray-500'
@@ -419,7 +419,7 @@ export default function MarketplaceAdminPage() {
         >
           {/* 진행률 바 */}
           {form.fundingTarget && Number(form.fundingTarget) > 0 && (
-            <div className="py-4 border-b border-gray-100">
+            <div className="py-4 border-b border-gray-200">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-medium text-gray-500">모집 진행률</span>
                 <span className="text-sm font-bold text-blue-600">{fundingProgress.toFixed(1)}%</span>

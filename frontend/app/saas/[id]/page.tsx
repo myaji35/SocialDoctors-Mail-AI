@@ -337,7 +337,8 @@ export default function SaasDetailPage() {
     }
 
     try {
-      const isAdmin = sessionStorage.getItem('adminAuth') === 'true';
+      const adminCheck = await fetch('/api/admin/auth/check');
+      const isAdmin = adminCheck.ok;
 
       const response = await fetch(`/api/feedback/${feedbackId}`, {
         method: 'POST',
@@ -518,8 +519,8 @@ export default function SaasDetailPage() {
               {!planeLoading && (
                 <div className="flex flex-wrap gap-3 mb-6">
                   {[
-                    { group: 'completed', label: '완료', color: 'bg-green-100 text-green-700 border-green-200' },
-                    { group: 'started', label: '진행중', color: 'bg-blue-100 text-blue-700 border-blue-200' },
+                    { group: 'completed', label: '완료', color: 'bg-green-600 text-white border-green-200' },
+                    { group: 'started', label: '진행중', color: 'bg-blue-500 text-white border-blue-200' },
                     { group: 'backlog', label: '백로그', color: 'bg-gray-100 text-gray-600 border-gray-200' },
                   ].map(({ group, label, color }) => {
                     const cnt = planeIssues.filter(i => i.state_detail?.group === group).length;
@@ -591,10 +592,10 @@ export default function SaasDetailPage() {
                     const isEditing = editingIssueId === issue.id;
 
                     const priorityMap: Record<string, string> = {
-                      urgent: 'bg-red-100 text-red-700',
-                      high: 'bg-orange-100 text-orange-700',
-                      medium: 'bg-yellow-100 text-yellow-700',
-                      low: 'bg-green-100 text-green-700',
+                      urgent: 'bg-red-500 text-white',
+                      high: 'bg-orange-500 text-white',
+                      medium: 'bg-yellow-500 text-white',
+                      low: 'bg-green-600 text-white',
                     };
                     const priorityLabel: Record<string, string> = {
                       urgent: '긴급', high: '높음', medium: '보통', low: '낮음',
@@ -656,7 +657,7 @@ export default function SaasDetailPage() {
                             ? 'bg-green-50 border-green-100'
                             : group === 'started'
                             ? 'bg-blue-50 border-blue-100'
-                            : 'bg-gray-50 border-gray-100'
+                            : 'bg-gray-50 border-gray-200'
                         }`}
                       >
                         {/* 상태 점 */}
@@ -825,7 +826,7 @@ export default function SaasDetailPage() {
                         key={feedback.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-gray-50 rounded-xl p-6 border-2 border-gray-100 hover:border-primary-200 transition-all"
+                        className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200 hover:border-primary-200 transition-all"
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div>

@@ -42,7 +42,7 @@ export default function InsightBoardDashboard() {
           { label: '평균 객단가', value: '₩129,700', change: '+3%', up: true },
           { label: '반품율', value: '1.2%', change: '-0.3%', up: true },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-green-600 font-semibold">{s.change}</p>
@@ -51,7 +51,7 @@ export default function InsightBoardDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">최근 7일 매출 추이</h2>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={salesData}>
@@ -64,7 +64,7 @@ export default function InsightBoardDashboard() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">일별 주문 수</h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={salesData}>
@@ -77,7 +77,7 @@ export default function InsightBoardDashboard() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">AI 이상 감지</h2>
           <div className="space-y-3">
             {[
@@ -96,7 +96,7 @@ export default function InsightBoardDashboard() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">채널별 매출 비중</h2>
           <div className="space-y-3">
             {[

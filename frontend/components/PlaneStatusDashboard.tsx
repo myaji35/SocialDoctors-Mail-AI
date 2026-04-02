@@ -87,13 +87,13 @@ export default function PlaneStatusDashboard() {
   const getPriorityColor = (priority?: string) => {
     switch (priority) {
       case 'urgent':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'bg-red-500 text-white border-red-200';
       case 'high':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'bg-orange-500 text-white border-orange-200';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+        return 'bg-yellow-500 text-white border-yellow-200';
       case 'low':
-        return 'bg-green-100 text-green-700 border-green-200';
+        return 'bg-green-600 text-white border-green-200';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }
@@ -153,7 +153,7 @@ export default function PlaneStatusDashboard() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
+                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="text-3xl mb-2">📊</div>
                 <div className="text-2xl font-bold text-gray-900">{totalIssues}</div>
@@ -165,7 +165,7 @@ export default function PlaneStatusDashboard() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
+                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="text-3xl mb-2">🚀</div>
                 <div className="text-2xl font-bold text-gray-900">{saasIssues.length}</div>
@@ -177,7 +177,7 @@ export default function PlaneStatusDashboard() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
+                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="text-3xl mb-2">✅</div>
                 <div className="text-2xl font-bold text-gray-900">{completedIssues.length}</div>
@@ -189,7 +189,7 @@ export default function PlaneStatusDashboard() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100"
+                className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200"
               >
                 <div className="text-3xl mb-2">📈</div>
                 <div className="text-2xl font-bold text-gray-900">{progressPercentage}%</div>
@@ -263,7 +263,7 @@ export default function PlaneStatusDashboard() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+                    className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden"
                   >
                     {/* State Header */}
                     <div
@@ -319,7 +319,7 @@ export default function PlaneStatusDashboard() {
                               href={`http://34.158.192.195/testgraph/projects/SOCIA/issues/${issue.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="ml-4 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg transition-colors text-sm"
+                              className="ml-4 px-4 py-2 bg-blue-50 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors text-sm"
                             >
                               ✈️ 보기
                             </a>

@@ -47,7 +47,7 @@ const plans = [
 export default function PayFlowPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -108,14 +108,14 @@ export default function PayFlowPage() {
               { label: '구독자 수', value: '284명' },
               { label: '환불율', value: '1.2%' },
             ].map((item) => (
-              <div key={item.label} className="bg-white rounded-xl p-4 border border-gray-100">
+              <div key={item.label} className="bg-white rounded-xl p-4 border border-gray-200">
                 <p className="text-xs text-gray-500 mb-1">{item.label}</p>
                 <p className="text-xl font-bold text-gray-900">{item.value}</p>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl p-4 border border-gray-100">
+            <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500 mb-3">최근 결제</p>
               {[
                 { name: '김○○', amount: '₩29,000', status: '성공', time: '2분 전', ok: true },
@@ -125,12 +125,12 @@ export default function PayFlowPage() {
                 <div key={r.name} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
                   <span className="text-xs font-semibold text-gray-700">{r.name}</span>
                   <span className="text-xs font-bold text-gray-900">{r.amount}</span>
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{r.status}</span>
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${r.ok ? 'bg-green-600 text-white' : 'bg-red-500 text-white'}`}>{r.status}</span>
                   <span className="text-xs text-gray-500">{r.time}</span>
                 </div>
               ))}
             </div>
-            <div className="bg-white rounded-xl p-4 border border-gray-100">
+            <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500 mb-3">구독 현황</p>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">

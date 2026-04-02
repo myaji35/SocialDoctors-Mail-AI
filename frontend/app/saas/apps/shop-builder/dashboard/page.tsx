@@ -37,7 +37,7 @@ export default function ShopBuilderDashboard() {
           { label: '등록 상품', value: '147개', change: '+12개' },
           { label: '방문자', value: '3,420명', change: '+890명' },
         ].map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+          <div key={s.label} className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
             <p className="text-xs text-gray-500 mb-1">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-xs mt-1 text-teal-600 font-semibold">{s.change}</p>
@@ -46,14 +46,14 @@ export default function ShopBuilderDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-gray-900">상품 목록</h2>
             <button className="text-xs px-3 py-1.5 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">+ 상품 추가</button>
           </div>
           <div className="space-y-3">
             {products.map((p, i) => (
-              <div key={i} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors">
+              <div key={i} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center text-teal-600 text-lg">🛍️</div>
                   <div>
@@ -63,14 +63,14 @@ export default function ShopBuilderDashboard() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-semibold text-teal-700">{p.price}</p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${p.status === '판매중' ? 'bg-green-100 text-green-700' : p.status === '재고부족' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>{p.status}</span>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${p.status === '판매중' ? 'bg-green-600 text-white' : p.status === '재고부족' ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white'}`}>{p.status}</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <h2 className="font-bold text-gray-900 mb-4">내 쇼핑몰 미리보기</h2>
           <div className="border-2 border-dashed border-teal-200 rounded-xl p-6 text-center">
             <div className="text-4xl mb-3">🏪</div>

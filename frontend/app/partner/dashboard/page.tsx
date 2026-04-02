@@ -131,7 +131,7 @@ export default function PartnerDashboardPage() {
 
         {/* 소개 링크 */}
         <div className={`bg-white rounded-xl p-6 mb-6 shadow-sm ${data.partner.status !== 'ACTIVE' ? 'opacity-60' : ''}`}>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">내 소개 링크</div>
+          <div className="text-xs font-semibold text-gray-600 mb-2">내 소개 링크</div>
           <div className="flex items-center gap-3">
             <div className={`flex-1 bg-gray-100 rounded-lg px-4 py-3 text-sm text-[#16325C] font-mono ${
               data.partner.status !== 'ACTIVE' ? 'blur-sm select-none' : ''
@@ -167,7 +167,7 @@ export default function PartnerDashboardPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {statCards.map((card) => (
             <div key={card.label} className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">{card.label}</div>
+              <div className="text-xs font-semibold text-gray-600 mb-2">{card.label}</div>
               <div className="text-2xl sm:text-3xl font-bold text-[#16325C]">
                 {card.value}
                 <span className="text-sm text-gray-500 ml-1 font-normal">{card.unit}</span>
@@ -202,7 +202,7 @@ export default function PartnerDashboardPage() {
         <div className="bg-white rounded-xl p-6 mb-6 shadow-sm">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">출금 가능 잔액</span>
+              <span className="text-xs font-semibold text-gray-600">출금 가능 잔액</span>
               <span className="text-2xl font-bold text-[#16325C] ml-3">
                 ₩{data.stats.currentBalance.toLocaleString()}
               </span>
@@ -220,10 +220,10 @@ export default function PartnerDashboardPage() {
 
           {showSettlement && (
             <form onSubmit={handleSettlement} className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input required placeholder="신청 금액 (원)" value={settlement.amount} onChange={(e) => setSettlement({ ...settlement, amount: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
-              <input required placeholder="은행명" value={settlement.bankName} onChange={(e) => setSettlement({ ...settlement, bankName: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
-              <input required placeholder="계좌번호" value={settlement.accountNumber} onChange={(e) => setSettlement({ ...settlement, accountNumber: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
-              <input required placeholder="예금주" value={settlement.accountHolder} onChange={(e) => setSettlement({ ...settlement, accountHolder: e.target.value })} className="px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="신청 금액 (원)" value={settlement.amount} onChange={(e) => setSettlement({ ...settlement, amount: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="은행명" value={settlement.bankName} onChange={(e) => setSettlement({ ...settlement, bankName: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="계좌번호" value={settlement.accountNumber} onChange={(e) => setSettlement({ ...settlement, accountNumber: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
+              <input required placeholder="예금주" value={settlement.accountHolder} onChange={(e) => setSettlement({ ...settlement, accountHolder: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-lg text-sm focus:border-[#00A1E0] focus:outline-none" />
               <button type="submit" className="sm:col-span-2 bg-[#00A1E0] hover:bg-[#0090C8] text-white rounded-lg py-3 text-sm font-semibold transition-colors">
                 정산 신청하기
               </button>
@@ -240,9 +240,9 @@ export default function PartnerDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b-2 border-gray-100">
+                  <tr className="border-b-2 border-gray-200">
                     {['날짜', '서비스', '결제액', '수수료', '상태'].map((h) => (
-                      <th key={h} className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
+                      <th key={h} className="text-left py-3 px-4 text-xs font-semibold text-gray-600">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -255,7 +255,7 @@ export default function PartnerDashboardPage() {
                       <td className="py-3 px-4 text-[#00A1E0] font-semibold">+₩{tx.commissionAmount.toLocaleString()}</td>
                       <td className="py-3 px-4">
                         <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-semibold ${
-                          tx.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                          tx.status === 'CONFIRMED' ? 'bg-green-600 text-white' : 'bg-yellow-500 text-white'
                         }`}>
                           {tx.status === 'CONFIRMED' ? '확정' : tx.status === 'PAID' ? '지급완료' : '대기'}
                         </span>

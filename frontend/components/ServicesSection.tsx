@@ -249,7 +249,7 @@ export default function ServicesSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200"
               >
                 {/* Icon */}
                 <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${service.gradientFrom} ${service.gradientTo} mb-6 shadow-md`}>

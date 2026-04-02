@@ -195,7 +195,7 @@ export default function ChannelEditModal({ channel, onClose, onSuccess }: Channe
         <div className="px-6 py-5 space-y-6">
           {/* 읽기 전용 정보 */}
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">채널 정보</h3>
+            <h3 className="text-xs font-bold text-gray-600 mb-3">채널 정보</h3>
             <div className="space-y-0 divide-y divide-gray-200/60">
               <div className="flex justify-between items-center py-2.5">
                 <span className="text-sm text-gray-600">페이지 ID</span>

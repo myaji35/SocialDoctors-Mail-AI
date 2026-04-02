@@ -55,7 +55,7 @@ const plans = [
 export default function MailRocketPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm flex items-center gap-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -131,20 +131,20 @@ export default function MailRocketPage() {
               { label: '수신거부', value: '0.3%', good: true },
               { label: '전환율', value: '1.8%', good: null },
             ].map((m) => (
-              <div key={m.label} className="bg-white rounded-xl p-3 border border-gray-100 text-center">
+              <div key={m.label} className="bg-white rounded-xl p-3 border border-gray-200 text-center">
                 <p className="text-xs text-gray-500">{m.label}</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{m.value}</p>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl p-4 border border-gray-100">
+            <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500 mb-3">최근 캠페인</p>
               {['2월 뉴스레터  오픈율: 31%', '신제품 출시  오픈율: 24%', '이탈 재활성화  오픈율: 18%'].map((c) => (
                 <div key={c} className="text-xs text-gray-700 py-2 border-b border-gray-50 last:border-0">{c}</div>
               ))}
             </div>
-            <div className="bg-white rounded-xl p-4 border border-gray-100">
+            <div className="bg-white rounded-xl p-4 border border-gray-200">
               <p className="text-xs text-gray-500 mb-3">A/B 테스트 결과</p>
               <div className="space-y-3">
                 <div>
