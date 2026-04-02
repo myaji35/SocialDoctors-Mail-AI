@@ -181,7 +181,7 @@ export default function SocialPulseDashboard() {
                 <div key={post.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                   <span className={`text-xs px-2 py-1 rounded-full font-semibold flex-shrink-0 ${
                     post.platform === 'FACEBOOK' ? 'bg-blue-500 text-white' :
-                    post.platform === 'INSTAGRAM' ? 'bg-pink-100 text-pink-700' :
+                    post.platform === 'INSTAGRAM' ? 'bg-pink-500 text-white' :
                     post.platform === 'YOUTUBE' ? 'bg-red-500 text-white' :
                     'bg-gray-200 text-gray-700'
                   }`}>{PLATFORM_LABEL[post.platform] ?? post.platform}</span>

@@ -79,7 +79,7 @@ export default function FormWizardDashboard() {
             {['단답형', '장문형', '객관식', '별점', '파일 업로드', '결제 연동'].map((field) => (
               <div key={field} className="flex items-center justify-between py-2 border-b border-gray-50">
                 <span className="text-sm text-gray-600">{field}</span>
-                <button className="text-xs px-3 py-1 bg-violet-100 text-violet-700 rounded-lg hover:bg-violet-200 transition-colors">추가</button>
+                <button className="text-xs px-3 py-1 bg-violet-500 text-white rounded-lg hover:bg-violet-200 transition-colors">추가</button>
               </div>
             ))}
           </div>
