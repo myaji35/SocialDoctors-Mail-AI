@@ -23,6 +23,7 @@ jobs:
           host: ${{ secrets.VULTR_HOST }}
           username: ${{ secrets.VULTR_USER }}
           key: ${{ secrets.VULTR_SSH_KEY }}
+          command_timeout: 20m
           script: |
             set -e
             echo "🚀 Starting deployment..."
