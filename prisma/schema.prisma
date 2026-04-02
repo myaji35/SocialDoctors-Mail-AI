@@ -12,6 +12,74 @@ datasource db {
   provider = "postgresql"
 }
 
+// ─── NextAuth User System ────────────────────────────────────────
+
+enum UserRole {
+  USER
+  PARTNER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  partner       Partner?
+  contents      Content[]
+  socialPosts   SocialPost[]
+  usageRecords  UsageRecord[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── SaaS Products ──────────────────────────────────────────────
+
 model SaasProduct {
   id              String    @id @default(cuid())
   name            String
@@ -58,6 +126,7 @@ enum SettlementStatus {
 model Partner {
   id           String        @id @default(cuid())
   userId       String        @unique
+  user         User?         @relation(fields: [userId], references: [id])
   referralCode String        @unique
   name         String
   email        String        @unique
@@ -172,6 +241,7 @@ enum ContentStatus {
 model Content {
   id          String        @id @default(cuid())
   userId      String
+  user        User?         @relation(fields: [userId], references: [id])
   type        ContentType
   status      ContentStatus @default(DRAFT)
   title       String?
@@ -235,6 +305,7 @@ model SnsChannel {
 model SocialPost {
   id               String         @id @default(cuid())
   userId           String
+  user             User?          @relation(fields: [userId], references: [id])
   platform         SocialPlatform
   status           PostStatus     @default(DRAFT)
   content          String         @db.Text
@@ -376,6 +447,7 @@ model FeedbackReply {
 model UsageRecord {
   id        String   @id @default(cuid())
   userId    String
+  user      User?    @relation(fields: [userId], references: [id])
   appSlug   String
   action    String
   metadata  Json?

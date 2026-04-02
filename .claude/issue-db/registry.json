@@ -237,6 +237,66 @@
       "parent": "ISS-009",
       "created_at": "2026-04-03T07:58:00",
       "description": "품질 점수 100/100 (기준: 70). 프로덕션 배포 가능 상태."
+    },
+    {
+      "id": "ISS-011",
+      "type": "DOMAIN_ANALYZE",
+      "title": "[Cycle2] User 모델 + SSO 도메인 분석",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "domain-analyst",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T08:00:00",
+      "description": "NextAuth 세션 구조 분석 → User 모델 설계 → Partner/Content/SocialPost 등 기존 userId FK 연결 방안 도출. SSO 토큰 전파 메커니즘 설계."
+    },
+    {
+      "id": "ISS-012",
+      "type": "GENERATE_CODE",
+      "title": "[Cycle2-P0] Prisma User 모델 생성 + NextAuth DB Adapter 연동",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T08:00:00",
+      "description": "Prisma User/Account/Session 모델 생성 (NextAuth Prisma Adapter 표준). 기존 Partner.userId, Content.userId 등을 User 모델과 FK 관계 설정. prisma migrate 실행."
+    },
+    {
+      "id": "ISS-013",
+      "type": "GENERATE_CODE",
+      "title": "[Cycle2-P0] NextAuth Prisma Adapter 통합 + 세션 확장",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T08:00:00",
+      "description": "next-auth/prisma-adapter 설치 + lib/auth.ts에 adapter 연결. session에 user.role, user.name 추가. 로그인 시 DB에 User 자동 생성."
+    },
+    {
+      "id": "ISS-014",
+      "type": "GENERATE_CODE",
+      "title": "[Cycle2-P1] 기존 API userId FK 마이그레이션",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T08:00:00",
+      "description": "Partner, Content, SocialPost, UsageRecord의 userId를 User 모델 FK로 연결. API에서 세션 사용자 검증 강화."
+    },
+    {
+      "id": "ISS-015",
+      "type": "RUN_TESTS",
+      "title": "[Cycle2-P1] User/SSO 관련 테스트 작성",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "test-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T08:00:00",
+      "description": "User 생성, 세션 확장, Partner-User FK, SSO 토큰 전파 테스트."
     }
   ],
   "hooks": {
@@ -277,11 +337,15 @@
       {
         "timestamp": "2026-04-03T07:58:00",
         "observation": "ISS-009 SCORE 완료. 총점 100/100. 테스트 25/25, 타입 20/20, SLDS 25/25, 보안 20/20, 인프라 10/10. DEPLOY_READY 판정."
+      },
+      {
+        "timestamp": "2026-04-03T08:00:00",
+        "observation": "Cycle 2 시작: User 모델 + SSO 기반. ISS-011~015 생성. 핵심 목표: User 테이블 생성 → NextAuth DB Adapter → 기존 userId FK 연결 → SSO 전파."
       }
     ]
   },
   "stats": {
-    "total_issues": 10,
+    "total_issues": 15,
     "completed": 9,
     "failed": 0,
     "evolved": 6
