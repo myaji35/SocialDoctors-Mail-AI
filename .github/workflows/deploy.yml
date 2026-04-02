@@ -52,6 +52,9 @@ jobs:
             # socialdoctors_internal 네트워크 연결 (DB 접근용)
             docker network connect socialdoctors_internal socialdoctors-nextjs || true
 
+            echo "📦 Running Prisma migrations..."
+            docker exec socialdoctors-nextjs npx prisma migrate deploy || echo "⚠️ Migration skipped (may need manual run)"
+
             echo "⏳ Waiting for app to start..."
             sleep 10
 
