@@ -8,6 +8,7 @@ const pricingPlans = [
   {
     name: 'Free',
     price: '₩0',
+    amount: 0,
     period: '영구 무료',
     description: '개인 사용자와 소규모 프로젝트에 적합',
     features: [
@@ -29,6 +30,7 @@ const pricingPlans = [
   {
     name: 'Professional',
     price: '₩49,000',
+    amount: 49000,
     period: '/월',
     description: '성장하는 비즈니스와 팀에 최적화',
     features: [
@@ -50,6 +52,7 @@ const pricingPlans = [
   {
     name: 'Enterprise',
     price: '₩149,000',
+    amount: 149000,
     period: '/월',
     description: '대규모 조직을 위한 엔터프라이즈 솔루션',
     features: [
@@ -94,12 +97,23 @@ export default function PricingSection() {
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('monthly');
   const router = useRouter();
 
-  const handlePlanCta = (cta: string) => {
-    if (cta === '영업팀 문의') {
+  const handlePlanCta = (plan: typeof pricingPlans[0]) => {
+    if (plan.cta === '영업팀 문의') {
       window.location.href = 'mailto:hello@socialdoctors.co.kr?subject=Enterprise 플랜 문의';
       return;
     }
-    router.push('/sign-up');
+    if (plan.amount === 0) {
+      router.push('/sign-up');
+      return;
+    }
+    const amount = billingPeriod === 'yearly' ? Math.floor(plan.amount * 10) : plan.amount;
+    const params = new URLSearchParams({
+      serviceName: `SocialDoctors ${plan.name}`,
+      serviceId: `sd-${plan.name.toLowerCase()}`,
+      planName: `${plan.name} ${billingPeriod === 'yearly' ? '연간' : '월간'}`,
+      amount: amount.toString(),
+    });
+    router.push(`/checkout?${params.toString()}`);
   };
 
   return (
@@ -212,7 +226,7 @@ export default function PricingSection() {
 
               {/* CTA Button */}
               <motion.button
-                onClick={() => handlePlanCta(plan.cta)}
+                onClick={() => handlePlanCta(plan)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`w-full py-3 rounded-lg font-semibold mb-8 transition-colors duration-200 ${

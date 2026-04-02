@@ -36,6 +36,8 @@ model User {
   contents      Content[]
   socialPosts   SocialPost[]
   usageRecords  UsageRecord[]
+  payments      Payment[]
+  subscriptions Subscription[]
 
   @@map("users")
 }
@@ -409,6 +411,79 @@ model CardSlide {
   @@unique([cardNewsId, slideOrder])
   @@index([cardNewsId])
   @@map("card_slides")
+}
+
+// ─── Payment (Toss Payments) ─────────────────────────────────────
+
+enum PaymentStatus {
+  READY
+  IN_PROGRESS
+  DONE
+  CANCELED
+  PARTIAL_CANCELED
+  ABORTED
+  EXPIRED
+}
+
+enum PaymentMethod {
+  CARD
+  VIRTUAL_ACCOUNT
+  TRANSFER
+  MOBILE_PHONE
+  CULTURE_GIFT_CERTIFICATE
+  TOSS_PAY
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User?         @relation(fields: [userId], references: [id])
+  orderId         String        @unique
+  orderName       String
+  amount          Int
+  status          PaymentStatus @default(READY)
+  method          PaymentMethod?
+  // Toss 결제 키
+  paymentKey      String?       @unique
+  // 연결된 SaaS 서비스
+  serviceId       String?
+  serviceName     String?
+  // Toss 응�� 원본
+  tossPayload     Json?
+  // 환불
+  cancelAmount    Int           @default(0)
+  cancelReason    String?
+  // 타임스탬프
+  requestedAt     DateTime      @default(now())
+  approvedAt      DateTime?
+  canceledAt      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@map("payments")
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User?    @relation(fields: [userId], references: [id])
+  serviceId       String
+  serviceName     String
+  planName        String
+  amount          Int
+  billingKey      String?
+  isActive        Boolean  @default(true)
+  currentPeriodStart DateTime @default(now())
+  currentPeriodEnd   DateTime
+  canceledAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, serviceId])
+  @@index([userId])
+  @@map("subscriptions")
 }
 
 // ─── Feedback ────────────────────────────────────────────────────

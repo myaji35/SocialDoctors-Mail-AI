@@ -22,6 +22,10 @@ export const prismaMock = {
   referralClick: createModelMock(),
   commissionTransaction: createModelMock(),
   user: createModelMock(),
+  payment: createModelMock(),
+  subscription: createModelMock(),
+  feedback: createModelMock(),
+  feedbackReply: createModelMock(),
   $transaction: vi.fn(),
 };
 
