@@ -389,6 +389,114 @@
         "max_score": 100,
         "verdict": "DEPLOY_READY"
       }
+    },
+    {
+      "id": "ISS-021",
+      "type": "GENERATE_CODE",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:00:00",
+      "title": "[Cycle4-P0] 홍보대행 Campaign 모델 + 의뢰 API",
+      "description": "Prisma Campaign 모델(의뢰자, 서비스, 예산, 상태, 발행내역) + REST API. 외부 프로젝트가 캠페인을 의뢰하고 진행 상황을 추적."
+    },
+    {
+      "id": "ISS-022",
+      "type": "GENERATE_CODE",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:00:00",
+      "title": "[Cycle4-P0] IMPD(choi-pd) 채널 등록 + 발행 E2E 테스트",
+      "description": "SocialDoctors에 choi-pd 테스트 채널 등록. mock 모드로 E2E 발행 테스트. IMPD social-pulse-client 동작 검증."
+    },
+    {
+      "id": "ISS-023",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:00:00",
+      "title": "[Cycle4-P1] 캠페인 결과 리포트 API + Admin 대시보드",
+      "description": "캠페인별 발행 건수, 플랫폼별 분포, callerApp별 통계. Admin 대시보드에 홍보대행 현황 섹션 추가."
+    },
+    {
+      "id": "ISS-024",
+      "type": "RUN_TESTS",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "test-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:00:00",
+      "title": "[Cycle4-P1] 홍보대행 API 테스트",
+      "description": "Campaign CRUD, 의뢰→발행→리포트 E2E, IMPD 연동 통합 테스트"
+    },
+    {
+      "id": "ISS-025",
+      "type": "SCORE",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "eval-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:00:00",
+      "title": "[Cycle4] 홍보대행 시스템 품질 평가",
+      "description": "홍보대행 프로세스 전체 품질 평가. 테스트, 보안, 아키텍처."
+    },
+    {
+      "id": "ISS-026",
+      "type": "GENERATE_CODE",
+      "priority": "P0",
+      "status": "COMPLETED",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:05:00",
+      "completed_at": "2026-04-03T09:05:00",
+      "title": "[Cycle4] 범용 SocialDoctors SDK 생성",
+      "description": "socialdoctors-sdk.ts — 프로젝트별 복사만으로 연동 가능한 단일 파일 SDK. Campaign/Publish/CardNews/AI 전체 커버.",
+      "result": {
+        "file": "frontend/lib/sdk/socialdoctors-sdk.ts",
+        "methods": 12,
+        "types": 10
+      }
+    },
+    {
+      "id": "ISS-027",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "COMPLETED",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:05:00",
+      "title": "[Cycle4] SDK 사용 가이드 + 연동 프롬프트 템플릿",
+      "description": "docs/sdk-guide.md — 외부 프로젝트 온보딩 가이드. 환경변수 설정, API 키 발급, 채널 등록 절차. Claude Code에서 다른 프로젝트 작업시 사용할 프롬프트 템플릿.",
+      "completed_at": "2026-04-03T09:10:00",
+      "result": {
+        "file": "docs/sdk-integration-guide.md",
+        "sections": 6,
+        "prompt_template": true
+      }
+    },
+    {
+      "id": "ISS-028",
+      "type": "GENERATE_CODE",
+      "priority": "P2",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T09:05:00",
+      "title": "[Cycle4] Admin 대시보드 — 홍보대행 현황 + callerApp별 통계",
+      "description": "관리자 대시보드에 홍보대행 의뢰 목록, callerApp별 발행 건수/수익, 캠페인 상태 차트 추가."
     }
   ],
   "hooks": {
@@ -453,8 +561,8 @@
     ]
   },
   "stats": {
-    "total_issues": 20,
-    "completed": 20,
+    "total_issues": 28,
+    "completed": 22,
     "failed": 0,
     "evolved": 6
   }

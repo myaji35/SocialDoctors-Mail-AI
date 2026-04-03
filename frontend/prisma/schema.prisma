@@ -486,6 +486,70 @@ model Subscription {
   @@map("subscriptions")
 }
 
+// ─── Campaign (홍보대행) ─────────────────────────────────────────
+
+enum CampaignStatus {
+  REQUESTED
+  APPROVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+enum CampaignType {
+  SNS_POST
+  CARD_NEWS
+  AI_COPY
+  FULL_PACKAGE
+}
+
+model Campaign {
+  id            String         @id @default(cuid())
+  callerApp     String
+  clientName    String
+  clientSlug    String
+  type          CampaignType
+  status        CampaignStatus @default(REQUESTED)
+  title         String
+  description   String?        @db.Text
+  budget        Int            @default(0)
+  platforms     String[]
+  // 발행 결과 추적
+  postsCount    Int            @default(0)
+  cardNewsCount Int            @default(0)
+  // 결제 연결
+  paymentId     String?
+  // 타임스탬프
+  requestedAt   DateTime       @default(now())
+  approvedAt    DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  items         CampaignItem[]
+
+  @@index([callerApp])
+  @@index([clientSlug])
+  @@index([status])
+  @@map("campaigns")
+}
+
+model CampaignItem {
+  id          String   @id @default(cuid())
+  campaignId  String
+  campaign    Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  type        String
+  postId      String?
+  cardNewsId  String?
+  platform    String?
+  status      String   @default("PENDING")
+  result      Json?
+  createdAt   DateTime @default(now())
+
+  @@index([campaignId])
+  @@map("campaign_items")
+}
+
 // ─── Feedback ────────────────────────────────────────────────────
 
 model Feedback {
