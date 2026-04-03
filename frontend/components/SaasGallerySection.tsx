@@ -18,6 +18,21 @@ interface SaasProduct {
   planeProjectId?: string | null;
 }
 
+function getCategoryIcon(category: string) {
+  const icons: Record<string, React.ReactNode> = {
+    '마케팅 자동화': <><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></>,
+    '파트너 관리': <><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4-4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 00-3-3.87" /><path d="M16 3.13a4 4 0 010 7.75" /></>,
+    'AI 콘텐츠': <><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" /></>,
+    '금융 · 보험': <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></>,
+    '지역 기반 서비스': <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></>,
+    '교육 SaaS': <><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" /><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" /></>,
+    'AI 영상 마케팅': <><polygon points="23 7 16 12 23 17 23 7" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></>,
+    '온라인 교육': <><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></>,
+    '결제 인프라': <><rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" /></>,
+  };
+  return icons[category] || <><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></>;
+}
+
 export default function SaasGallerySection() {
   const router = useRouter();
   const [products, setProducts] = useState<SaasProduct[]>([]);
@@ -109,13 +124,13 @@ export default function SaasGallerySection() {
                     }`}>
                       {product.thumbnail ? (
                         <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover" />
-                      ) : featured ? (
-                        <div className="text-center">
-                          <div className="text-5xl mb-2">🎓</div>
-                          <span className="text-white text-sm font-bold opacity-80">AI 자격증 플랫폼</span>
-                        </div>
                       ) : (
-                        <span className="text-6xl">🚀</span>
+                        <div className="text-center">
+                          <svg className="w-12 h-12 text-white/90 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                            {getCategoryIcon(product.category)}
+                          </svg>
+                          <span className="text-white text-sm font-semibold opacity-80">{product.category}</span>
+                        </div>
                       )}
 
                       {/* 관리 페이지로 이동하는 수정 버튼 */}
