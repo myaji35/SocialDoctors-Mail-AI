@@ -282,6 +282,10 @@ export default function AdminPage() {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                 카드뉴스 관리
               </Link>
+              <Link href="/admin/campaigns" className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                홍보대행 관리
+              </Link>
             </div>
           </div>
           <div className="flex gap-3">
