@@ -19,127 +19,129 @@ export interface SaasProduct {
   updatedAt?: string;
 }
 
-// 초기 데이터
+// ─── 실제 서비스 데이터 ──────────────────────────────────────────
 const initialProducts: SaasProduct[] = [
+  // ── SocialDoctors 자체 서비스 ──
   {
     id: '1',
     name: 'Social Pulse',
-    overview: '소셜 미디어 자동화 마케팅 플랫폼. AI 기반 콘텐츠 생성 및 예약 게시로 Facebook, Instagram, X 등 멀티 플랫폼을 하나의 대시보드에서 통합 관리합니다.',
-    url: 'https://socialpulse.example.com',
-    partners: ['마케팅팀', '파트너A'],
-    category: '마케팅',
+    overview: '6개 플랫폼 자동 발행 홍보대행 엔진. Facebook, Instagram, Threads, X, TikTok, YouTube에 AI 카피와 카드뉴스를 생성하고 원클릭으로 동시 발행합니다. 외부 프로젝트 연동 SDK로 홍보대행 캠페인을 의뢰부터 리포트까지 자동화.',
+    url: 'https://app.socialdoctors.kr',
+    partners: ['Gagahoho'],
+    category: '마케팅 자동화',
     isActive: true,
     planeIssueId: null,
     planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-02-01T00:00:00.000Z',
   },
   {
     id: '2',
     name: 'Partner Hub',
-    overview: '제휴사 및 인플루언서 파트너 관리 플랫폼. 고유 레퍼럴 링크 발급, 실시간 클릭·전환 추적, 자동 수수료 계산 및 정산 시스템을 제공합니다.',
-    url: 'https://partnerhub.example.com',
-    partners: ['영업팀', '파트너B'],
+    overview: '제휴 파트너 관리 + 커미션 자동 정산 시스템. 고유 레퍼럴 링크 발급, 실시간 클릭·전환 추적, 결제 시 20% 커미션 자동 계산. Toss Payments 연동으로 파트너 정산까지 원스톱 처리.',
+    url: 'https://app.socialdoctors.kr/partner',
+    partners: ['Gagahoho'],
     category: '파트너 관리',
     isActive: true,
     planeIssueId: null,
     planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-02-01T00:00:00.000Z',
   },
   {
     id: '3',
     name: 'Content AI',
-    overview: 'GPT 기반 AI 콘텐츠 생성 도구. 블로그, SNS, 광고 카피라이팅을 자동화하며 브랜드 톤앤매너를 학습해 일관된 메시지를 다국어로 즉시 생성합니다.',
-    url: 'https://contentai.example.com',
-    partners: ['콘텐츠팀'],
-    category: 'AI',
+    overview: 'Google Gemini 기반 AI 콘텐츠 생성 도구. 블로그, SNS 카피, 광고 문구, 이메일 뉴스레터, 제품 설명, 보도자료 6종 템플릿으로 브랜드 톤에 맞는 콘텐츠를 즉시 생성합니다.',
+    url: 'https://app.socialdoctors.kr/saas/apps/content-ai',
+    partners: ['Gagahoho'],
+    category: 'AI 콘텐츠',
     isActive: true,
     planeIssueId: null,
     planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-02-01T00:00:00.000Z',
   },
+  // ── 외부 연동 프로젝트 (실제 서비스) ──
   {
     id: '4',
-    name: 'Insight Board',
-    overview: '비즈니스 전 부서 데이터를 통합 시각화하는 실시간 BI 대시보드. AI 예측 분석으로 매출 트렌드를 파악하고 이상 징후를 즉시 감지해 알림을 보냅니다.',
-    url: 'https://insightboard.example.com',
-    partners: ['데이터팀'],
-    category: '분석',
+    name: 'InsureGraph Pro',
+    overview: 'GraphRAG 기반 보험 분석 SaaS. 보험 약관 간 관계를 그래프로 시각화하고 AI가 고객 맞춤형 보험 상품을 추천합니다. 고객 생애주기가치(CLV) 분석과 자동 갱신 알림으로 컨설팅 효율을 극대화.',
+    url: 'https://insuregraph.socialdoctors.kr',
+    partners: ['Gagahoho', '보험 컨설턴트'],
+    category: '금융 · 보험',
     isActive: true,
     planeIssueId: null,
-    planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    planeProjectId: null,
+    createdAt: '2025-12-01T00:00:00.000Z',
   },
   {
     id: '5',
-    name: 'CRM Pro',
-    overview: '고객과의 모든 접점을 관리하는 통합 CRM. 고객 세그먼트, 자동화 커뮤니케이션, 구매 이력 분석, 로열티 프로그램으로 재구매율을 높입니다.',
-    url: 'https://crmpro.example.com',
-    partners: ['영업팀', '고객팀'],
-    category: 'CRM',
+    name: 'Townin',
+    overview: '의정부시 중심 하이퍼로컬 생활 OS. 디지털 전단지, AR 포인트 시스템, 실시간 CCTV 안전지도, IoT 센서 통합. 가맹점 관리 대시보드와 지역 맞춤형 보험 서비스를 제공하는 지역 상생 플랫폼.',
+    url: 'https://townin.kr',
+    partners: ['Gagahoho', '의정부시'],
+    category: '지역 기반 서비스',
     isActive: true,
     planeIssueId: null,
-    planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    planeProjectId: null,
+    createdAt: '2025-10-01T00:00:00.000Z',
   },
   {
     id: '6',
-    name: 'Pay Flow',
-    overview: '카드·계좌이체·간편결제를 지원하는 통합 결제 시스템. 정기 구독 관리, 자동 정산, 세금 계산서 발행, 환불 처리를 원스톱으로 제공합니다.',
-    url: 'https://payflow.example.com',
-    partners: ['재무팀'],
-    category: '결제',
+    name: 'imPD',
+    overview: '5060 베이비부머 대상 스마트폰 창업 교육 플랫폼. 온라인/오프라인/B2B 교육 과정 관리, 수강 결제, 커뮤니티, 뉴스레터 배포를 통합 제공. 최범희 PD의 "스마트폰 연구소" 공식 브랜드 허브.',
+    url: 'https://impd.co.kr',
+    partners: ['Gagahoho', '최범희 PD'],
+    category: '교육 SaaS',
     isActive: true,
     planeIssueId: null,
-    planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    planeProjectId: null,
+    createdAt: '2025-11-01T00:00:00.000Z',
   },
   {
     id: '7',
-    name: 'Mail Rocket',
-    overview: '드래그앤드롭 에디터와 자동화 워크플로우를 갖춘 이메일 마케팅 플랫폼. A/B 테스트와 세그먼트 발송으로 오픈율·전환율을 극대화합니다.',
-    url: 'https://mailrocket.example.com',
-    partners: ['마케팅팀'],
-    category: '이메일',
+    name: 'OmniVibePro',
+    overview: 'AI 기반 영상 자동화 SaaS. 구글시트 데이터로 영상 자동 생성, AI 음성 클로닝(ElevenLabs), 자동 자막(Whisper STT), Remotion 렌더링, 멀티채널 자동 배포까지 전 과정 자동화. Zero-Fault Audio 99% 정확도.',
+    url: 'https://omnivibe.socialdoctors.kr',
+    partners: ['Gagahoho'],
+    category: 'AI 영상 마케팅',
     isActive: true,
     planeIssueId: null,
-    planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    planeProjectId: null,
+    createdAt: '2026-01-01T00:00:00.000Z',
   },
   {
     id: '8',
-    name: 'SEO Radar',
-    overview: '키워드 리서치, 순위 추적, 기술 SEO 감사, 백링크 분석을 제공하는 검색 최적화 도구. AI가 SEO 개선 액션 플랜을 자동으로 제안합니다.',
-    url: 'https://seoradar.example.com',
-    partners: ['마케팅팀'],
-    category: 'SEO',
+    name: 'CertiGraph',
+    overview: 'AI 기반 자격증 시험 준비 플랫폼. PDF 기출문제 자동 파싱, Knowledge Graph 개념 시각화, CBT 모의고사, 오답 분석, AI 해설 생성. 사회복지사 등 국가자격증 수험생을 위한 올인원 학습 도구.',
+    url: 'https://exams.townin.net',
+    partners: ['Gagahoho'],
+    category: '온라인 교육',
     isActive: true,
     planeIssueId: null,
-    planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    planeProjectId: null,
+    createdAt: '2025-11-15T00:00:00.000Z',
   },
   {
     id: '9',
-    name: 'Task Flow',
-    overview: '칸반 보드, 간트 차트, 시간 추적을 지원하는 팀 협업 프로젝트 관리 도구. Slack·Notion 연동으로 기존 워크플로우에 자연스럽게 통합됩니다.',
-    url: 'https://taskflow.example.com',
-    partners: ['개발팀', '운영팀'],
-    category: '프로젝트 관리',
+    name: 'Pay Flow',
+    overview: 'Toss Payments 기반 통합 결제 시스템. 카드·계좌이체·간편결제 지원, 구독 관리, 파트너 커미션 자동 계산, 웹훅 기반 실시간 정산. SocialDoctors 전체 마켓플레이스의 결제 인프라.',
+    url: 'https://app.socialdoctors.kr/checkout',
+    partners: ['Gagahoho'],
+    category: '결제 인프라',
     isActive: true,
     planeIssueId: null,
     planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-03-01T00:00:00.000Z',
   },
   {
     id: '10',
-    name: 'Community Hub',
-    overview: '포럼·이벤트·멤버십 등급·포인트 시스템을 갖춘 회원 커뮤니티 플랫폼. 고객 참여를 유도하고 브랜드 로열티를 높여 생애 가치(LTV)를 극대화합니다.',
-    url: 'https://communityhub.example.com',
-    partners: ['커뮤니티팀'],
-    category: '커뮤니티',
+    name: 'Card News AI',
+    overview: 'AI 카드뉴스 자동 생성 + SNS 발행 시스템. Gemini AI가 주제에 맞는 5~9슬라이드 카드뉴스를 생성하고, 렌더링 후 Facebook 등 SNS에 원클릭 자동 발행. 서비스소개·교육·이벤트 4종 템플릿.',
+    url: 'https://app.socialdoctors.kr/admin/card-news',
+    partners: ['Gagahoho'],
+    category: 'AI 콘텐츠',
     isActive: true,
     planeIssueId: null,
     planeProjectId: 'SOCIA',
-    createdAt: new Date().toISOString(),
+    createdAt: '2026-03-01T00:00:00.000Z',
   },
 ];
 
@@ -150,17 +152,13 @@ const DATA_FILE = path.join(DATA_DIR, 'saas-products.json');
 // 데이터 파일에서 읽기
 function loadProducts(): SaasProduct[] {
   try {
-    // data 디렉토리 생성
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-
-    // 파일이 없으면 초기 데이터로 생성
     if (!fs.existsSync(DATA_FILE)) {
       saveProducts(initialProducts);
       return initialProducts;
     }
-
     const fileContent = fs.readFileSync(DATA_FILE, 'utf-8');
     return JSON.parse(fileContent);
   } catch (error) {
@@ -181,25 +179,16 @@ function saveProducts(products: SaasProduct[]): void {
 // 메모리 캐시
 let saasProducts: SaasProduct[] = loadProducts();
 
-// CRUD 작업을 위한 유틸리티 함수들
-
 export const SaasStore = {
-  // 모든 제품 조회
   getAll(): SaasProduct[] {
     return [...saasProducts];
   },
-
-  // ID로 제품 조회
   getById(id: string): SaasProduct | undefined {
     return saasProducts.find((p) => p.id === id);
   },
-
-  // 카테고리로 제품 필터링
   getByCategory(category: string): SaasProduct[] {
     return saasProducts.filter((p) => p.category === category);
   },
-
-  // 새 제품 생성
   create(product: Omit<SaasProduct, 'id' | 'createdAt'>): SaasProduct {
     const newProduct: SaasProduct = {
       ...product,
@@ -210,67 +199,32 @@ export const SaasStore = {
     saveProducts(saasProducts);
     return newProduct;
   },
-
-  // 제품 업데이트
   update(id: string, updates: Partial<SaasProduct>): SaasProduct | null {
     const index = saasProducts.findIndex((p) => p.id === id);
-    if (index === -1) {
-      return null;
-    }
-
-    saasProducts[index] = {
-      ...saasProducts[index],
-      ...updates,
-      id, // ID는 변경 불가
-      updatedAt: new Date().toISOString(),
-    };
-
+    if (index === -1) return null;
+    saasProducts[index] = { ...saasProducts[index], ...updates, id, updatedAt: new Date().toISOString() };
     saveProducts(saasProducts);
     return saasProducts[index];
   },
-
-  // 제품 삭제
   delete(id: string): SaasProduct | null {
     const index = saasProducts.findIndex((p) => p.id === id);
-    if (index === -1) {
-      return null;
-    }
-
-    const deletedProduct = saasProducts[index];
+    if (index === -1) return null;
+    const deleted = saasProducts[index];
     saasProducts = saasProducts.filter((p) => p.id !== id);
     saveProducts(saasProducts);
-    return deletedProduct;
+    return deleted;
   },
-
-  // 데이터 초기화 (테스트 용도)
   reset(): void {
     saasProducts = [...initialProducts];
     saveProducts(saasProducts);
   },
-
-  // 통계 정보
-  getStats(): {
-    total: number;
-    byCategory: Record<string, number>;
-    withPlaneSync: number;
-  } {
+  getStats(): { total: number; byCategory: Record<string, number>; withPlaneSync: number } {
     const byCategory: Record<string, number> = {};
     let withPlaneSync = 0;
-
-    saasProducts.forEach((product) => {
-      // 카테고리별 카운트
-      byCategory[product.category] = (byCategory[product.category] || 0) + 1;
-
-      // Plane 연동된 제품 카운트
-      if (product.planeIssueId) {
-        withPlaneSync++;
-      }
+    saasProducts.forEach((p) => {
+      byCategory[p.category] = (byCategory[p.category] || 0) + 1;
+      if (p.planeIssueId) withPlaneSync++;
     });
-
-    return {
-      total: saasProducts.length,
-      byCategory,
-      withPlaneSync,
-    };
+    return { total: saasProducts.length, byCategory, withPlaneSync };
   },
 };
