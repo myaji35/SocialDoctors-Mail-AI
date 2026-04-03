@@ -117,19 +117,33 @@ export default function SaasGallerySection() {
                     onClick={() => handleViewDetail(product)}
                   >
                     {/* Thumbnail */}
-                    <div className={`relative h-48 flex items-center justify-center overflow-hidden ${
+                    <div className={`relative h-52 flex items-center justify-center overflow-hidden ${
                       featured
                         ? 'bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'
-                        : 'bg-gradient-to-br from-primary-500 to-primary-700'
+                        : 'bg-gradient-to-br from-slate-800 to-slate-900'
                     }`}>
                       {product.thumbnail ? (
-                        <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover" />
+                        <>
+                          <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover opacity-60" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                          <div className="absolute bottom-4 left-4 right-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                                {getCategoryIcon(product.category)}
+                              </svg>
+                              <span className="text-white/70 text-xs font-medium">{product.category}</span>
+                            </div>
+                            <h4 className="text-white text-lg font-bold">{product.name}</h4>
+                          </div>
+                        </>
                       ) : (
                         <div className="text-center">
-                          <svg className="w-12 h-12 text-white/90 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                            {getCategoryIcon(product.category)}
-                          </svg>
-                          <span className="text-white text-sm font-semibold opacity-80">{product.category}</span>
+                          <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center mx-auto mb-3">
+                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                              {getCategoryIcon(product.category)}
+                            </svg>
+                          </div>
+                          <span className="text-white/80 text-sm font-semibold">{product.category}</span>
                         </div>
                       )}
 
