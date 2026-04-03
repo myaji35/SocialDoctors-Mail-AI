@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { searchParams } = request.nextUrl;
+  const { searchParams } = new URL(request.url);
   const status = searchParams.get('status');
   const clientSlug = searchParams.get('clientSlug');
   const limit = Math.min(parseInt(searchParams.get('limit') ?? '20', 10), 100);

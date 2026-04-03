@@ -26,6 +26,8 @@ export const prismaMock = {
   subscription: createModelMock(),
   feedback: createModelMock(),
   feedbackReply: createModelMock(),
+  campaign: { ...createModelMock(), groupBy: vi.fn(), aggregate: vi.fn() },
+  campaignItem: createModelMock(),
   $transaction: vi.fn(),
 };
 

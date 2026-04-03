@@ -394,61 +394,66 @@
       "id": "ISS-021",
       "type": "GENERATE_CODE",
       "priority": "P0",
-      "status": "READY",
+      "status": "COMPLETED",
       "assignee": "agent-harness",
       "depth": 0,
       "parent": null,
       "created_at": "2026-04-03T09:00:00",
       "title": "[Cycle4-P0] 홍보대행 Campaign 모델 + 의뢰 API",
-      "description": "Prisma Campaign 모델(의뢰자, 서비스, 예산, 상태, 발행내역) + REST API. 외부 프로젝트가 캠페인을 의뢰하고 진행 상황을 추적."
+      "description": "Prisma Campaign 모델(의뢰자, 서비스, 예산, 상태, 발행내역) + REST API. 외부 프로젝트가 캠페인을 의뢰하고 진행 상황을 추적.",
+      "completed_at": "2026-04-03T09:15:00"
     },
     {
       "id": "ISS-022",
       "type": "GENERATE_CODE",
       "priority": "P0",
-      "status": "READY",
+      "status": "COMPLETED",
       "assignee": "agent-harness",
       "depth": 0,
       "parent": null,
       "created_at": "2026-04-03T09:00:00",
       "title": "[Cycle4-P0] IMPD(choi-pd) 채널 등록 + 발행 E2E 테스트",
-      "description": "SocialDoctors에 choi-pd 테스트 채널 등록. mock 모드로 E2E 발행 테스트. IMPD social-pulse-client 동작 검증."
+      "description": "SocialDoctors에 choi-pd 테스트 채널 등록. mock 모드로 E2E 발행 테스트. IMPD social-pulse-client 동작 검증.",
+      "completed_at": "2026-04-03T09:15:00"
     },
     {
       "id": "ISS-023",
       "type": "GENERATE_CODE",
       "priority": "P1",
-      "status": "READY",
+      "status": "COMPLETED",
       "assignee": "agent-harness",
       "depth": 0,
       "parent": null,
       "created_at": "2026-04-03T09:00:00",
       "title": "[Cycle4-P1] 캠페인 결과 리포트 API + Admin 대시보드",
-      "description": "캠페인별 발행 건수, 플랫폼별 분포, callerApp별 통계. Admin 대시보드에 홍보대행 현황 섹션 추가."
+      "description": "캠페인별 발행 건수, 플랫폼별 분포, callerApp별 통계. Admin 대시보드에 홍보대행 현황 섹션 추가.",
+      "completed_at": "2026-04-03T09:15:00"
     },
     {
       "id": "ISS-024",
       "type": "RUN_TESTS",
       "priority": "P1",
-      "status": "READY",
+      "status": "COMPLETED",
       "assignee": "test-harness",
       "depth": 0,
       "parent": null,
       "created_at": "2026-04-03T09:00:00",
       "title": "[Cycle4-P1] 홍보대행 API 테스트",
-      "description": "Campaign CRUD, 의뢰→발행→리포트 E2E, IMPD 연동 통합 테스트"
+      "description": "Campaign CRUD, 의뢰→발행→리포트 E2E, IMPD 연동 통합 테스트",
+      "completed_at": "2026-04-03T09:15:00"
     },
     {
       "id": "ISS-025",
       "type": "SCORE",
       "priority": "P1",
-      "status": "READY",
+      "status": "COMPLETED",
       "assignee": "eval-harness",
       "depth": 0,
       "parent": null,
       "created_at": "2026-04-03T09:00:00",
       "title": "[Cycle4] 홍보대행 시스템 품질 평가",
-      "description": "홍보대행 프로세스 전체 품질 평가. 테스트, 보안, 아키텍처."
+      "description": "홍보대행 프로세스 전체 품질 평가. 테스트, 보안, 아키텍처.",
+      "completed_at": "2026-04-03T09:15:00"
     },
     {
       "id": "ISS-026",
@@ -496,7 +501,8 @@
       "parent": null,
       "created_at": "2026-04-03T09:05:00",
       "title": "[Cycle4] Admin 대시보드 — 홍보대행 현황 + callerApp별 통계",
-      "description": "관리자 대시보드에 홍보대행 의뢰 목록, callerApp별 발행 건수/수익, 캠페인 상태 차트 추가."
+      "description": "관리자 대시보드에 홍보대행 의뢰 목록, callerApp별 발행 건수/수익, 캠페인 상태 차트 추가.",
+      "completed_at": "2026-04-03T09:15:00"
     }
   ],
   "hooks": {
@@ -557,12 +563,16 @@
       {
         "timestamp": "2026-04-03T08:48:00",
         "observation": "ISS-010 DEPLOY_READY 완료. Vultr 프로덕션 배포 성공. npm ci→install 전환, SSH 타임아웃 20분 확장, Prisma migrate deploy 자동화. 모든 Cycle 1~3 변경사항 반영됨."
+      },
+      {
+        "timestamp": "2026-04-03T09:15:00",
+        "observation": "Cycle 4 완료. 홍보대행 프로세스: Campaign 모델 + CRUD/Execute/Report API + 범용 SDK + 연동 가이드 + 테스트 32/32. IMPD 클라이언트 확장. SCORE 98/100."
       }
     ]
   },
   "stats": {
     "total_issues": 28,
-    "completed": 22,
+    "completed": 27,
     "failed": 0,
     "evolved": 6
   }
