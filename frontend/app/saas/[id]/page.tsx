@@ -402,20 +402,22 @@ export default function SaasDetailPage() {
             <h1 className="text-5xl font-bold mb-4">{product.name}</h1>
             <p className="text-xl text-white/90 max-w-3xl">{product.overview}</p>
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href={product.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-4 bg-white text-primary-700 font-semibold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center"
-              >
-                웹사이트 방문하기
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                  <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                </svg>
-              </a>
-            </div>
+            {product.url && (
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href={product.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-white text-primary-700 font-semibold rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center"
+                >
+                  웹사이트 방문하기
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                  </svg>
+                </a>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
@@ -978,17 +980,25 @@ export default function SaasDetailPage() {
                   </div>
                 )}
 
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-500 mb-2">웹사이트</h4>
-                  <a
-                    href={product.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary-600 hover:text-primary-700 text-sm break-all underline"
-                  >
-                    {product.url}
-                  </a>
-                </div>
+                {product.url && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 mb-2">웹사이트</h4>
+                    <a
+                      href={product.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary-600 hover:text-primary-700 text-sm break-all underline"
+                    >
+                      {product.url}
+                    </a>
+                  </div>
+                )}
+                {!product.url && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-500 mb-2">웹사이트</h4>
+                    <span className="text-gray-400 text-sm">준비 중</span>
+                  </div>
+                )}
               </div>
             </motion.div>
 
