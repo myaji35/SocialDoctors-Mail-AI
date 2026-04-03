@@ -124,7 +124,7 @@ export default function SaasGallerySection() {
                     }`}>
                       {product.thumbnail ? (
                         <>
-                          <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover opacity-60" />
+                          <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover object-center opacity-70" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                           <div className="absolute bottom-4 left-4 right-4">
                             <div className="flex items-center gap-2 mb-1">
