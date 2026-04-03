@@ -7,6 +7,7 @@ import { publishToInstagram } from './instagram';
 import { publishToThreads } from './threads';
 import { publishToTikTok } from './tiktok';
 import { publishToX } from './twitter';
+import { publishToYouTube } from './youtube';
 import { mockPublish } from './mock';
 import { ChannelCredentials, PublishPayload, PublishResult, SnsPublishError } from './types';
 
@@ -44,6 +45,8 @@ export async function publishToChannel(
       return publishToTikTok(credentials, payload);
     case 'X':
       return publishToX(credentials, payload);
+    case 'YOUTUBE':
+      return publishToYouTube(credentials, payload);
     default:
       throw new SnsPublishError(`지원하지 않는 플랫폼: ${platform}`, platform, 'UNSUPPORTED_PLATFORM');
   }
