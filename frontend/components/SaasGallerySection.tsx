@@ -59,11 +59,8 @@ export default function SaasGallerySection() {
   };
 
   const handleViewDetail = (product: SaasProduct) => {
-    if (product.url.startsWith('http')) {
-      window.open(product.url, '_blank', 'noopener,noreferrer');
-    } else {
-      router.push(`/saas/${product.id}`);
-    }
+    // 항상 SocialDoctors 내부 상세 페이지로 이동
+    router.push(`/saas/${product.id}`);
   };
 
   const isFeatured = (product: SaasProduct) => product.name === 'CertiGraph';
