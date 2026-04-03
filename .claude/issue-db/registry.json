@@ -610,6 +610,54 @@
         "score": 97,
         "verdict": "DEPLOY_READY"
       }
+    },
+    {
+      "id": "ISS-035",
+      "type": "GENERATE_CODE",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T10:00:00",
+      "title": "[Cycle6] OAuth Refresh Token 자동 갱신 로직",
+      "description": "YouTube/TikTok refresh token 자동 갱신. token_manager.ts 유틸리티."
+    },
+    {
+      "id": "ISS-036",
+      "type": "GENERATE_CODE",
+      "priority": "P0",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T10:00:00",
+      "title": "[Cycle6] ISS-028 Admin 대시보드 홍보대행 현황",
+      "description": "Admin 페이지에 홍보대행 캠페인 현황, callerApp별 발행 통계, 플랫폼별 분포 섹션 추가."
+    },
+    {
+      "id": "ISS-037",
+      "type": "GENERATE_CODE",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "agent-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T10:00:00",
+      "title": "[Cycle6] 환경변수 템플릿 + 토큰 발급 가이드 + PDF",
+      "description": ".env.example 업데이트, 토큰 발급 가이드 문서, 대표님용 PDF 작업 가이드."
+    },
+    {
+      "id": "ISS-038",
+      "type": "RUN_TESTS",
+      "priority": "P1",
+      "status": "READY",
+      "assignee": "test-harness",
+      "depth": 0,
+      "parent": null,
+      "created_at": "2026-04-03T10:00:00",
+      "title": "[Cycle6] IMPD E2E 테스트 스크립트",
+      "description": "전체 홍보 파이프라인 자동 검증 스크립트."
     }
   ],
   "hooks": {
@@ -678,7 +726,7 @@
     ]
   },
   "stats": {
-    "total_issues": 34,
+    "total_issues": 38,
     "completed": 33,
     "failed": 0,
     "evolved": 6
